@@ -1,0 +1,805 @@
+{
+  "modelName": "AppServer",
+  "displayName": "Application Server",
+  "description": "Application Server Data Model",
+  "objectSummary": {
+    "Event-Based": 7,
+    "Transaction-Based": 0,
+    "Search-Based": 0
+  },
+  "objects": [
+    {
+      "objectName": "Performance",
+      "displayName": "Performance",
+      "parentName": "BaseEvent",
+      "fields": [
+        {
+          "fieldName": "application_name",
+          "owner": "Performance",
+          "type": "string",
+          "fieldSearch": "",
+          "required": false,
+          "multivalue": false,
+          "hidden": false,
+          "editable": true,
+          "displayName": "application_name",
+          "comment": ""
+        },
+        {
+          "fieldName": "vendor_product",
+          "owner": "Performance",
+          "type": "string",
+          "fieldSearch": "",
+          "required": false,
+          "multivalue": false,
+          "hidden": false,
+          "editable": true,
+          "displayName": "vendor_product",
+          "comment": ""
+        },
+        {
+          "fieldName": "appserver_port_number",
+          "owner": "Performance",
+          "type": "number",
+          "fieldSearch": "",
+          "required": false,
+          "multivalue": false,
+          "hidden": false,
+          "editable": true,
+          "displayName": "appserver_port_number",
+          "comment": ""
+        },
+        {
+          "fieldName": "application_server",
+          "owner": "Performance",
+          "type": "string",
+          "fieldSearch": "",
+          "required": false,
+          "multivalue": false,
+          "hidden": false,
+          "editable": true,
+          "displayName": "application_server",
+          "comment": ""
+        },
+        {
+          "fieldName": "_time",
+          "owner": "BaseEvent",
+          "type": "timestamp",
+          "fieldSearch": "_time=*",
+          "required": true,
+          "multivalue": false,
+          "hidden": false,
+          "editable": true,
+          "displayName": "_time",
+          "comment": ""
+        },
+        {
+          "fieldName": "host",
+          "owner": "BaseEvent",
+          "type": "string",
+          "fieldSearch": "host=*",
+          "required": true,
+          "multivalue": false,
+          "hidden": false,
+          "editable": true,
+          "displayName": "host",
+          "comment": ""
+        },
+        {
+          "fieldName": "source",
+          "owner": "BaseEvent",
+          "type": "string",
+          "fieldSearch": "",
+          "required": false,
+          "multivalue": false,
+          "hidden": false,
+          "editable": true,
+          "displayName": "source",
+          "comment": ""
+        },
+        {
+          "fieldName": "sourcetype",
+          "owner": "BaseEvent",
+          "type": "string",
+          "fieldSearch": "",
+          "required": false,
+          "multivalue": false,
+          "hidden": false,
+          "editable": true,
+          "displayName": "sourcetype",
+          "comment": ""
+        }
+      ],
+      "calculations": [
+        {
+          "outputFields": [
+            {
+              "fieldName": "application_instance",
+              "owner": "Performance",
+              "type": "string",
+              "fieldSearch": "",
+              "required": false,
+              "multivalue": false,
+              "hidden": false,
+              "editable": true,
+              "displayName": "application_instance",
+              "comment": ""
+            }
+          ],
+          "calculationID": "usmw4q28onjexw29",
+          "owner": "Performance",
+          "editable": true,
+          "comment": "",
+          "calculationType": "Eval",
+          "expression": "application_server.\"|\".application_name"
+        }
+      ],
+      "constraints": [
+        {
+          "search": "tag=appserver tag=performance",
+          "owner": "Performance"
+        }
+      ],
+      "lineage": "Performance"
+    },
+    {
+      "objectName": "Web_Transaction",
+      "displayName": "Web Transaction",
+      "parentName": "Performance",
+      "fields": [
+        {
+          "fieldName": "response_time",
+          "owner": "Performance.Web_Transaction",
+          "type": "number",
+          "fieldSearch": "",
+          "required": false,
+          "multivalue": false,
+          "hidden": false,
+          "editable": true,
+          "displayName": "response_time",
+          "comment": ""
+        }
+      ],
+      "calculations": [
+        {
+          "outputFields": [
+            {
+              "fieldName": "response_code",
+              "owner": "Performance.Web_Transaction",
+              "type": "number",
+              "fieldSearch": "",
+              "required": false,
+              "multivalue": false,
+              "hidden": false,
+              "editable": true,
+              "displayName": "response_code",
+              "comment": ""
+            }
+          ],
+          "calculationID": "7wudm041upzxgvi",
+          "owner": "Performance.Web_Transaction",
+          "editable": true,
+          "comment": "",
+          "calculationType": "Eval",
+          "expression": "if(len(response_code)>0, response_code,0)"
+        }
+      ],
+      "constraints": [
+        {
+          "search": "tag=transactions",
+          "owner": "Performance.Web_Transaction"
+        }
+      ],
+      "lineage": "Performance.Web_Transaction"
+    },
+    {
+      "objectName": "Runtime",
+      "displayName": "Runtime",
+      "parentName": "Performance",
+      "fields": [
+        {
+          "fieldName": "cpu_utilization_percent",
+          "owner": "Performance.Runtime",
+          "type": "number",
+          "fieldSearch": "",
+          "required": false,
+          "multivalue": false,
+          "hidden": false,
+          "editable": true,
+          "displayName": "cpu_utilization_percent",
+          "comment": ""
+        },
+        {
+          "fieldName": "memory_heap_free_percent",
+          "owner": "Performance.Runtime",
+          "type": "number",
+          "fieldSearch": "",
+          "required": false,
+          "multivalue": false,
+          "hidden": false,
+          "editable": true,
+          "displayName": "memory_heap_free_percent",
+          "comment": ""
+        },
+        {
+          "fieldName": "available_threads_count_percent",
+          "owner": "Performance.Runtime",
+          "type": "number",
+          "fieldSearch": "",
+          "required": false,
+          "multivalue": false,
+          "hidden": false,
+          "editable": true,
+          "displayName": "available_threads_count_percent",
+          "comment": ""
+        },
+        {
+          "fieldName": "memory_heap_used",
+          "owner": "Performance.Runtime",
+          "type": "number",
+          "fieldSearch": "",
+          "required": false,
+          "multivalue": false,
+          "hidden": false,
+          "editable": true,
+          "displayName": "memory_heap_used",
+          "comment": ""
+        },
+        {
+          "fieldName": "memory_heap_size",
+          "owner": "Performance.Runtime",
+          "type": "number",
+          "fieldSearch": "",
+          "required": false,
+          "multivalue": false,
+          "hidden": false,
+          "editable": true,
+          "displayName": "memory_heap_size",
+          "comment": ""
+        },
+        {
+          "fieldName": "perm_gen_usage",
+          "owner": "Performance.Runtime",
+          "type": "number",
+          "fieldSearch": "",
+          "required": false,
+          "multivalue": false,
+          "hidden": false,
+          "editable": true,
+          "displayName": "perm_gen_usage",
+          "comment": ""
+        },
+        {
+          "fieldName": "thread_id",
+          "owner": "Performance.Runtime",
+          "type": "number",
+          "fieldSearch": "",
+          "required": false,
+          "multivalue": false,
+          "hidden": false,
+          "editable": true,
+          "displayName": "thread_id",
+          "comment": ""
+        },
+        {
+          "fieldName": "thread_state",
+          "owner": "Performance.Runtime",
+          "type": "string",
+          "fieldSearch": "",
+          "required": false,
+          "multivalue": false,
+          "hidden": false,
+          "editable": true,
+          "displayName": "thread_state",
+          "comment": ""
+        },
+        {
+          "fieldName": "application_name",
+          "owner": "Performance",
+          "type": "string",
+          "fieldSearch": "",
+          "required": false,
+          "multivalue": false,
+          "hidden": false,
+          "editable": true,
+          "displayName": "application_name",
+          "comment": ""
+        },
+        {
+          "fieldName": "vendor_product",
+          "owner": "Performance",
+          "type": "string",
+          "fieldSearch": "",
+          "required": false,
+          "multivalue": false,
+          "hidden": false,
+          "editable": true,
+          "displayName": "vendor_product",
+          "comment": ""
+        },
+        {
+          "fieldName": "appserver_port_number",
+          "owner": "Performance",
+          "type": "number",
+          "fieldSearch": "",
+          "required": false,
+          "multivalue": false,
+          "hidden": false,
+          "editable": true,
+          "displayName": "appserver_port_number",
+          "comment": ""
+        },
+        {
+          "fieldName": "application_server",
+          "owner": "Performance",
+          "type": "string",
+          "fieldSearch": "",
+          "required": false,
+          "multivalue": false,
+          "hidden": false,
+          "editable": true,
+          "displayName": "application_server",
+          "comment": ""
+        }
+      ],
+      "calculations": [
+        {
+          "outputFields": [
+            {
+              "fieldName": "active_threads_count",
+              "owner": "Performance.Runtime",
+              "type": "number",
+              "fieldSearch": "",
+              "required": false,
+              "multivalue": false,
+              "hidden": false,
+              "editable": true,
+              "displayName": "active_threads_count",
+              "comment": ""
+            }
+          ],
+          "calculationID": "wkhknseimn53ik9",
+          "owner": "Performance.Runtime",
+          "editable": true,
+          "comment": "",
+          "calculationType": "Eval",
+          "expression": "if((vendor_product=\"Apache Tomcat\") AND (thread_state=\"active\"),1,if(len(active_threads_count)>0, active_threads_count,-1))"
+        },
+        {
+          "outputFields": [
+            {
+              "fieldName": "hung_threads_count",
+              "owner": "Performance.Runtime",
+              "type": "number",
+              "fieldSearch": "",
+              "required": false,
+              "multivalue": false,
+              "hidden": false,
+              "editable": true,
+              "displayName": "hung_threads_count",
+              "comment": ""
+            }
+          ],
+          "calculationID": "a10e9txk1w8tcsor",
+          "owner": "Performance.Runtime",
+          "editable": true,
+          "comment": "",
+          "calculationType": "Eval",
+          "expression": "if((vendor_product=\"Apache Tomcat\") AND (thread_state=\"hung\"),1,if(len(hung_threads_count)>0, hung_threads_count,-1))"
+        },
+        {
+          "outputFields": [
+            {
+              "fieldName": "memory_used",
+              "owner": "Performance.Runtime",
+              "type": "number",
+              "fieldSearch": "",
+              "required": false,
+              "multivalue": false,
+              "hidden": false,
+              "editable": true,
+              "displayName": "memory_used",
+              "comment": ""
+            }
+          ],
+          "calculationID": "83x76oj3hnbnvcxr",
+          "owner": "Performance.Runtime",
+          "editable": true,
+          "comment": "",
+          "calculationType": "Eval",
+          "expression": "if(len(memory_used)>0, memory_used,-1)"
+        },
+        {
+          "outputFields": [
+            {
+              "fieldName": "memory_pool_size",
+              "owner": "Performance.Runtime",
+              "type": "number",
+              "fieldSearch": "",
+              "required": false,
+              "multivalue": false,
+              "hidden": false,
+              "editable": true,
+              "displayName": "memory_pool_size",
+              "comment": ""
+            }
+          ],
+          "calculationID": "xpzvyu5dxc9mgqfr",
+          "owner": "Performance.Runtime",
+          "editable": true,
+          "comment": "",
+          "calculationType": "Eval",
+          "expression": "if(len(memory_pool_size)>0, memory_pool_size,-1)"
+        },
+        {
+          "outputFields": [
+            {
+              "fieldName": "garbage_collection_time",
+              "owner": "Performance.Runtime",
+              "type": "number",
+              "fieldSearch": "",
+              "required": false,
+              "multivalue": false,
+              "hidden": false,
+              "editable": true,
+              "displayName": "garbage_collection_time",
+              "comment": ""
+            }
+          ],
+          "calculationID": "fq7zgc8pnegynwmi",
+          "owner": "Performance.Runtime",
+          "editable": true,
+          "comment": "",
+          "calculationType": "Eval",
+          "expression": "if(len(garbage_collection_time)>0, garbage_collection_time,-1)"
+        },
+        {
+          "outputFields": [
+            {
+              "fieldName": "garbage_collection_count",
+              "owner": "Performance.Runtime",
+              "type": "number",
+              "fieldSearch": "",
+              "required": false,
+              "multivalue": false,
+              "hidden": false,
+              "editable": true,
+              "displayName": "garbage_collection_count",
+              "comment": ""
+            }
+          ],
+          "calculationID": "nvnpx9oplbjiqkt9",
+          "owner": "Performance.Runtime",
+          "editable": true,
+          "comment": "",
+          "calculationType": "Eval",
+          "expression": "if(len(garbage_collection_count)>0, garbage_collection_count,-1)"
+        }
+      ],
+      "constraints": [
+        {
+          "search": "tag=runtime",
+          "owner": "Performance.Runtime"
+        }
+      ],
+      "lineage": "Performance.Runtime"
+    },
+    {
+      "objectName": "Inventory",
+      "displayName": "Inventory",
+      "parentName": "BaseEvent",
+      "fields": [
+        {
+          "fieldName": "full_host_name",
+          "owner": "Inventory",
+          "type": "string",
+          "fieldSearch": "",
+          "required": false,
+          "multivalue": false,
+          "hidden": false,
+          "editable": true,
+          "displayName": "full_host_name",
+          "comment": ""
+        },
+        {
+          "fieldName": "ip_address",
+          "owner": "Inventory",
+          "type": "string",
+          "fieldSearch": "",
+          "required": false,
+          "multivalue": false,
+          "hidden": false,
+          "editable": true,
+          "displayName": "ip_address",
+          "comment": ""
+        },
+        {
+          "fieldName": "product_family",
+          "owner": "Inventory",
+          "type": "string",
+          "fieldSearch": "",
+          "required": false,
+          "multivalue": false,
+          "hidden": false,
+          "editable": true,
+          "displayName": "product_family",
+          "comment": ""
+        },
+        {
+          "fieldName": "vendor_product",
+          "owner": "Inventory",
+          "type": "string",
+          "fieldSearch": "",
+          "required": false,
+          "multivalue": false,
+          "hidden": false,
+          "editable": true,
+          "displayName": "vendor_product",
+          "comment": ""
+        },
+        {
+          "fieldName": "version_number",
+          "owner": "Inventory",
+          "type": "string",
+          "fieldSearch": "",
+          "required": false,
+          "multivalue": false,
+          "hidden": false,
+          "editable": true,
+          "displayName": "version_number",
+          "comment": ""
+        },
+        {
+          "fieldName": "vendor_product_runtime",
+          "owner": "Inventory",
+          "type": "string",
+          "fieldSearch": "",
+          "required": false,
+          "multivalue": false,
+          "hidden": false,
+          "editable": true,
+          "displayName": "vendor_product_runtime",
+          "comment": ""
+        },
+        {
+          "fieldName": "runtime_vendor",
+          "owner": "Inventory",
+          "type": "string",
+          "fieldSearch": "",
+          "required": false,
+          "multivalue": false,
+          "hidden": false,
+          "editable": true,
+          "displayName": "runtime_vendor",
+          "comment": ""
+        },
+        {
+          "fieldName": "vendor_product_runtime_version",
+          "owner": "Inventory",
+          "type": "string",
+          "fieldSearch": "",
+          "required": false,
+          "multivalue": false,
+          "hidden": false,
+          "editable": true,
+          "displayName": "vendor_product_runtime_version",
+          "comment": ""
+        },
+        {
+          "fieldName": "appserver_port_number",
+          "owner": "Inventory",
+          "type": "number",
+          "fieldSearch": "",
+          "required": false,
+          "multivalue": false,
+          "hidden": false,
+          "editable": true,
+          "displayName": "appserver_port_number",
+          "comment": ""
+        },
+        {
+          "fieldName": "application_server",
+          "owner": "Inventory",
+          "type": "string",
+          "fieldSearch": "",
+          "required": false,
+          "multivalue": false,
+          "hidden": false,
+          "editable": true,
+          "displayName": "application_server",
+          "comment": ""
+        }
+      ],
+      "calculations": [
+        {
+          "outputFields": [
+            {
+              "fieldName": "root_role",
+              "owner": "Inventory",
+              "type": "string",
+              "fieldSearch": "",
+              "required": false,
+              "multivalue": false,
+              "hidden": false,
+              "editable": true,
+              "displayName": "root_role",
+              "comment": ""
+            }
+          ],
+          "calculationID": "0j7e04b8i42njyvi",
+          "owner": "Inventory",
+          "editable": true,
+          "comment": "",
+          "calculationType": "Eval",
+          "expression": "\"application_server\""
+        }
+      ],
+      "constraints": [
+        {
+          "search": "tag=appserver tag=inventory",
+          "owner": "Inventory"
+        }
+      ],
+      "lineage": "Inventory"
+    },
+    {
+      "objectName": "Application",
+      "displayName": "Application",
+      "parentName": "Inventory",
+      "fields": [
+        {
+          "fieldName": "application_name",
+          "owner": "Inventory.Application",
+          "type": "string",
+          "fieldSearch": "",
+          "required": false,
+          "multivalue": false,
+          "hidden": false,
+          "editable": true,
+          "displayName": "application_name",
+          "comment": ""
+        }
+      ],
+      "calculations": [
+        {
+          "outputFields": [
+            {
+              "fieldName": "leaf_role",
+              "owner": "Inventory.Application",
+              "type": "string",
+              "fieldSearch": "",
+              "required": false,
+              "multivalue": false,
+              "hidden": false,
+              "editable": true,
+              "displayName": "leaf_role",
+              "comment": ""
+            }
+          ],
+          "calculationID": "1h5qu667e04tpgb9",
+          "owner": "Inventory.Application",
+          "editable": true,
+          "comment": "",
+          "calculationType": "Eval",
+          "expression": "\"Application\""
+        },
+        {
+          "outputFields": [
+            {
+              "fieldName": "application_instance",
+              "owner": "Inventory.Application",
+              "type": "string",
+              "fieldSearch": "",
+              "required": false,
+              "multivalue": false,
+              "hidden": false,
+              "editable": true,
+              "displayName": "application_instance",
+              "comment": ""
+            }
+          ],
+          "calculationID": "1r3lqled5nxywrk9",
+          "owner": "Inventory.Application",
+          "editable": true,
+          "comment": "",
+          "calculationType": "Eval",
+          "expression": "application_server.\"|\".application_name"
+        }
+      ],
+      "constraints": [
+        {
+          "search": "tag=application",
+          "owner": "Inventory.Application"
+        }
+      ],
+      "lineage": "Inventory.Application"
+    },
+    {
+      "objectName": "Throughput",
+      "displayName": "Throughput",
+      "parentName": "Performance",
+      "fields": [
+        {
+          "fieldName": "request_count",
+          "owner": "Performance.Throughput",
+          "type": "number",
+          "fieldSearch": "",
+          "required": false,
+          "multivalue": false,
+          "hidden": false,
+          "editable": true,
+          "displayName": "request_count",
+          "comment": ""
+        }
+      ],
+      "calculations": [],
+      "constraints": [
+        {
+          "search": "tag=throughput",
+          "owner": "Performance.Throughput"
+        }
+      ],
+      "lineage": "Performance.Throughput"
+    },
+    {
+      "objectName": "Session",
+      "displayName": "Session",
+      "parentName": "Performance",
+      "fields": [
+        {
+          "fieldName": "active_sessions_count",
+          "owner": "Performance.Session",
+          "type": "number",
+          "fieldSearch": "",
+          "required": false,
+          "multivalue": false,
+          "hidden": false,
+          "editable": true,
+          "displayName": "active_sessions_count",
+          "comment": ""
+        },
+        {
+          "fieldName": "rejected_sessions_count",
+          "owner": "Performance.Session",
+          "type": "number",
+          "fieldSearch": "",
+          "required": false,
+          "multivalue": false,
+          "hidden": false,
+          "editable": true,
+          "displayName": "rejected_sessions_count",
+          "comment": ""
+        },
+        {
+          "fieldName": "expired_sessions_count",
+          "owner": "Performance.Session",
+          "type": "number",
+          "fieldSearch": "",
+          "required": false,
+          "multivalue": false,
+          "hidden": false,
+          "editable": true,
+          "displayName": "expired_sessions_count",
+          "comment": ""
+        }
+      ],
+      "calculations": [],
+      "constraints": [
+        {
+          "search": "tag=session",
+          "owner": "Performance.Session"
+        }
+      ],
+      "lineage": "Performance.Session"
+    }
+  ],
+  "objectNameList": [
+    "Performance",
+    "Web_Transaction",
+    "Runtime",
+    "Inventory",
+    "Application",
+    "Throughput",
+    "Session"
+  ]
+}

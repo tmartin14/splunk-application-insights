@@ -1,0 +1,410 @@
+/*  _______________________________kh092416*/
+/* Begin general overides of Mr. Sparkle*/
+/* begin font selection */
+@font-face {font-family: 'helvetica-neue-light';src: url('fonts/helveticaneue-light-webfont.eot');src: url('fonts/helveticaneue-light-webfont.eot?#iefix') format('embedded-opentype'),url('fonts/helveticaneue-light-webfont.woff') format('woff'),url('fonts/helveticaneue-light-webfont.ttf') format('truetype');}
+@font-face {font-family: 'open-sansregular';src: url('fonts/OpenSans-Regular-webfont.eot');src: url('fonts/OpenSans-Regular-webfont.eot?#iefix') format('embedded-opentype'),url('fonts/OpenSans-Regular-webfont.woff') format('woff'),url('fonts/OpenSans-Regular-webfont.ttf') format('truetype'),url('fonts/OpenSans-Regular-webfont.svg#open_sansregular') format('svg');font-weight: normal;font-style: normal;}
+@font-face {font-family: 'ubunturegular';src: url('ubuntu-regular-webfont.eot');src: url('ubuntu-regular-webfont.eot?#iefix') format('embedded-opentype'),url('ubuntu-regular-webfont.woff') format('woff'),url('ubuntu-regular-webfont.ttf') format('truetype'),url('ubuntu-regular-webfont.svg#ubunturegular') format('svg');font-weight: normal;font-style: normal;}
+@font-face {font-family: 'sevenet_7regular';src: url('sevenet7-webfont.eot');src: url('sevenet7-webfont.eot?#iefix') format('embedded-opentype'),url('sevenet7-webfont.woff') format('woff'),url('sevenet7-webfont.ttf') format('truetype'),url('sevenet7-webfont.svg#sevenet_7regular') format('svg');font-weight: normal;font-style: normal;}
+@font-face {font-family: 'splidget.extend';src: url('fonts/splidget.extend.eot');src: url('fonts/splidget.extend.eot?#iefix') format('embedded-opentype'),url('fonts/splidget.extend.woff') format('woff'),url('fonts/splidget.extend.ttf') format('truetype'),url('fonts/splidget.extend.svg#splidget.extend') format('svg');font-weight: normal;font-style: normal;}
+/* end font selection */
+/* Begin general overides of Mr. Sparkle*/
+.fieldset .input {
+    min-width: 220px !important;
+    width:auto !important;
+}
+.dashboard-panel .fieldset {
+    padding: 2px 6px;
+    margin-bottom: 0;
+    min-height: 20px;
+}
+#app a:hover {
+  color:#D2D2D2;
+}
+#os a:hover {
+  color:#D2D2D2;
+}
+.home-dashboard-title h3 {
+    font-weight: 200!important;
+    font-size: 22px!important;
+}
+.hide-global-filters {
+    display:none !important;
+}
+.section-home .app-title {
+    background-color: #eee !important;
+}
+.splunk-treemap div {
+    color: #FFF !important;
+    font-family: 'lato-medium', 'Lucida Sans Unicode', Arial, Helvetica;
+    font-size: 14px;
+}
+.modal {
+    width: 550px !important;
+}
+#tableSearchFu table {
+    margin-top: 0px !important;
+    border-top-color:#fff !important;
+    width:500px !important;
+}
+.dashboard-row .dashboard-panel .panel-element-row .table {
+    margin-top: .75px !important;
+    border-top: 1px solid rgba(255,255,255,1) !important;
+    border-radius: 6px;
+}
+.splunk-choice-input {
+    padding-bottom: 0px !important;
+}
+.single-result-unit {
+  margin-right:5px;
+}
+.h2-hdr-drilldown h2 {
+  float:left;
+}
+.drilldown {
+  float:right;
+  padding: 10px 10px 0px 0px;
+}
+ h3 {
+    margin: 4px 0 !important;
+}
+/* start home page dashboard title*/
+.home-dashboard-title h3 {
+  font-family:"open-sansregular" sans-serif !important;
+    font-weight: normal;
+    font-size: 22px !important;
+}
+.home-dashboard-title {
+    font-family:"open-sansregular" sans-serif !important;
+    padding-left: 20px;
+    padding-top: 10px;
+}
+/* end home page dashboard title*/
+.container-fluid::before, .container-fluid::after {
+    visibility:hidden;
+}
+.app-bar::before, .app-bar::after {
+    visibility:hidden;
+}
+/* logo */
+.app-logo {
+  position:relative !important;
+  top:2px;
+}
+/* h2 element styling */
+.html h2 {
+  font-family: "helvetica-neue-light",sans-serif !important;
+}
+h2.panel-title {
+    font-family: "helvetica-neue-light",sans-serif;
+    background: rgba(255,255,255,.8) !important;
+    font-size: 20px !important;
+    padding: 12px 6px 6px 6px ;
+    letter-spacing: -.1px !important;
+}
+/* Generic */
+.dashboard-row .dashboard-panel h2.panel-title {
+    background: rgba(255,255,255,.3) !important;
+    font-size: 19px !important;
+    padding: 6px 6px 6px 6px;
+    letter-spacing: -.1px !important;
+    border-radius: 6px 6px 0px 0px !important;
+}
+.dashboard-row .dashboard-panel {
+  background: rgba(255,255,255,.7) !important;
+  border-radius: 6px !important;
+  border: 1px solid #CCC;
+  position: relative;
+  min-height: 800px;
+}
+.dashboard-row .dashboard-panel .dashboard-element {
+    border-top: 1px solid rgba(255,255,255,1) !important;
+    border-radius: 6px;
+}
+.dashboard-row .dashboard-panel .panel-head h3 {
+    padding: 5px 5px 5px 12px;
+}
+.main-section-body {
+  color: #333;
+  min-height: 500px;
+  border-top: 1px solid rgba(255,255,255,.8);
+  border-bottom: 1px solid rgba(255,255,255,.8);
+  /*add custom background here
+  background-image: url("bkd_splunk_hand_sililcone_board_104237162.png") !important;
+  min-height: 700px !important;*/
+  background-size: 950px;
+  background-repeat: no-repeat;;
+  background: -moz-linear-gradient(top, #ffffff 0%, #ededed 2%, #d6cfd6 58%, #ebe8eb 99%, #ebe8eb 100%);
+  background: -webkit-gradient(left top, left bottom, color-stop(0%, #ffffff), color-stop(2%, #ededed), color-stop(58%, #d6cfd6), color-stop(99%, #ebe8eb), color-stop(100%, #ebe8eb));
+  background: -webkit-linear-gradient(top, #ffffff 0%, #ededed 2%, #d6cfd6 58%, #ebe8eb 99%, #ebe8eb 100%);
+  background: -o-linear-gradient(top, #ffffff 0%, #ededed 2%, #d6cfd6 58%, #ebe8eb 99%, #ebe8eb 100%);
+  background: -ms-linear-gradient(top, #ffffff 0%, #ededed 2%, #d6cfd6 58%, #ebe8eb 99%, #ebe8eb 100%);
+  background: linear-gradient(to bottom, #ffffff 0%, #ededed 2%, #d6cfd6 58%, #ebe8eb 99%, #ebe8eb 100%);
+  filter: progid: DXImageTransform.Microsoft.gradient( startColorstr='#ffffff', endColorstr='#ebe8eb', GradientType=0);
+}
+/* begin panel style */
+#btn_element1 .dashboard-row .dashboard-panel .panel-body.html {
+  border-top: 0px solid rgba(255,255,255,.7) !important;
+  background: rgba(255,255,255,.7);
+  background: -moz-linear-gradient(left, rgba(255,255,255,.7) 0%, rgba(246,246,246,.7) 47%, rgba(237,237,237,.7) 70%);
+  background: -webkit-gradient(left top, right top, color-stop(0%, rgba(255,255,255,.7)), color-stop(47%, rgba(246,246,246,.7)), color-stop(70%, rgba(237,237,237,1)));
+  background: -webkit-linear-gradient(left, rgba(255,255,255,.7) 0%, rgba(246,246,246,.7) 47%, rgba(237,237,237,.7) 70%);
+  background: -o-linear-gradient(left, rgba(255,255,255,.7) 0%, rgba(246,246,246,.7) 47%, rgba(237,237,237,.7) 70%);
+  background: -ms-linear-gradient(left, rgba(255,255,255,.7) 0%, rgba(246,246,246,.7) 47%, rgba(237,237,237,.7) 70%);
+  background: linear-gradient(to right, rgba(255,255,255,.7) 0%, rgba(246,246,246,.7) 47%, rgba(237,237,237,.7) 70%);
+  filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffffff', endColorstr='#ededed', GradientType=1 );
+  padding: 0px 0px 0px 0px !important;
+}
+.dashboard-row .dashboard-panel .panel-body.html {
+  border-top: 1px solid rgba(225,225,225,.2) !important;
+  background: rgba(255,255,255,.7);
+  background: -moz-linear-gradient(left, rgba(255,255,255,.7) 0%, rgba(246,246,246,.7) 47%, rgba(237,237,237,.7) 70%);
+  background: -webkit-gradient(left top, right top, color-stop(0%, rgba(255,255,255,.7)), color-stop(47%, rgba(246,246,246,.7)), color-stop(70%, rgba(237,237,237,1)));
+  background: -webkit-linear-gradient(left, rgba(255,255,255,.7) 0%, rgba(246,246,246,.7) 47%, rgba(237,237,237,.7) 70%);
+  background: -o-linear-gradient(left, rgba(255,255,255,.7) 0%, rgba(246,246,246,.7) 47%, rgba(237,237,237,.7) 70%);
+  background: -ms-linear-gradient(left, rgba(255,255,255,.7) 0%, rgba(246,246,246,.7) 47%, rgba(237,237,237,.7) 70%);
+  background: linear-gradient(to right, rgba(255,255,255,.7) 0%, rgba(246,246,246,.7) 47%, rgba(237,237,237,.7) 70%);
+  filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffffff', endColorstr='#ededed', GradientType=1 );
+  padding: 0px 0px 0px 0px !important;
+  border-radius: 4px;
+}
+.html h3 {
+    padding:4px 4px 4px 8px;
+    float:left;
+    line-height: inherit;
+    margin:4px!important;
+}
+/*edit took out panel-element-row*/
+.dashboard-row .dashboard-panel .panel-element-row{
+    border-top: 1px solid rgba(150,150,150,.2) !important;
+    border-radius:3px;
+}
+.dashboard-row .dashboard-panel .panel-body .splunk-table {
+    margin-top: 0px !important;
+    *zoom: 1;
+}
+/* This styles the header element or "title" of a chart */
+.view-mode .panel-head, .view-mode .grouped .panel-head {
+    min-height: 4px !important;
+    border-top: 0px solid #eee !important;
+    background: rgba(252,252,252,1);
+    background: -moz-linear-gradient(top, rgba(252,252,252,1) 0%, rgba(246,246,246,1) 31%, rgba(227,224,227,1) 100%);
+    background: -webkit-gradient(left top, left bottom, color-stop(0%, rgba(252,252,252,1)), color-stop(31%, rgba(246,246,246,1)), color-stop(100%, rgba(227,224,227,1)));
+    background: -webkit-linear-gradient(top, rgba(252,252,252,1) 0%, rgba(246,246,246,1) 31%, rgba(227,224,227,1) 100%);
+    background: -o-linear-gradient(top, rgba(252,252,252,1) 0%, rgba(246,246,246,1) 31%, rgba(227,224,227,1) 100%);
+    background: -ms-linear-gradient(top, rgba(252,252,252,1) 0%, rgba(246,246,246,1) 31%, rgba(227,224,227,1) 100%);
+    background: linear-gradient(to bottom, rgba(252,252,252,1) 0%, rgba(246,246,246,1) 31%, rgba(227,224,227,1) 100%);
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#fcfcfc', endColorstr='#e3e0e3', GradientType=0 );
+    border-radius:2px;
+}
+/* This controls the styling of the navigation menu */
+.app-bar .nav-pills, .lite-bar .nav-pills {
+  font-family:  "helvetica-neue-light", Helvetica, Arial, sans-serif;
+  font-size: 14px;
+  margin: 0;
+  padding-left: 0;
+  letter-spacing: .30px;
+}
+.app-bar .nav-pills > li > a, .lite-bar .nav-pills > li > a {
+  color: #FFFFFF;
+  padding: 0px 15px;
+  line-height: 40px;
+  position: relative;
+  border-radius: 0px;
+  border: medium none;
+  margin: 0px;
+  white-space: nowrap;
+}
+/* This controls the link-switcher buttons - added margin to bottom */
+.btn-pill:hover, .btn-pill.active, .btn-pill:focus {
+    margin-bottom: 0px;
+    color:#333;
+}
+
+[class*='icn-']:before{
+	 display: inline-block;
+   font-family: 'splidget.extend';
+   font-style: normal;
+   font-weight: normal;
+   speak:none;
+   -webkit-font-smoothing: antialiased;
+   -moz-osx-font-smoothing: grayscale
+}
+.icn-searchfu:before{content:'\0041';}
+.icn-easy:before{content:'\0042';}
+.icn-welcome:before{content:'\0043';}
+.icn-greater-than:before{content:'\0044';}
+.icn-splk-mch-learn:before{content:'\0045';}
+.icn-splunkpad:before{content:'\0046';}
+.icn-splidget:before{content:'\0047';}
+.icn-feedback:before{content:'\0048';}
+.icn-assess:before{content:'\0049';}
+.icn-data-curator:before{content:'\004a';}
+.icn-toggle-up:before{content:'\004b';}
+.icn-toggle-down:before{content:'\004c';}
+.icn-normal-state:before{content:'\004d';}
+.icn-informational-state:before{content:'\004e';}
+.icn-poor-state:before{content:'\004f';}
+.icn-beyond-fatal-state:before{content:'\0050';}
+.icn-fatal-state:before{content:'\0051';}
+.icn-os-app:before{content:'\0052';}
+.icn-app:before{content:'\0053';}
+.icn-os:before{content:'\0054';}
+.icn-vm:before{content:'\0055';}
+.icn-extinguish:before{content:'\0056';}
+.icn-fire:before{content:'\0057';}
+.icn-location:before{content:'\0058';}
+.icn-globe:before{content:'\0059';}
+.icn-num-1:before{content:'\005a';}
+.icn-num-2:before{content:'\0061';}
+.icn-num-3:before{content:'\0062';}
+.icn-num-4:before{content:'\0063';}
+.icn-num-5:before{content:'\0064';}
+.icn-os-linux:before{content:'\0065';}
+.icn-os-windows:before{content:'\0066';}
+.icn-user-experience:before{content:'\0067';}
+.icn-filter:before{content:'\0068';}
+.icn-firewall:before{content:'\0069';}
+.icn-bar-chart:before{content:'\006a';}
+.icn-rfid:before{content:'\006b';}
+.icn-internet-of-things:before{content:'\006c';}
+.icn-quote-left:before{content:'\006d';}
+.icn-quote-right:before{content:'\006e';}
+.icn-ipad:before{content:'\006f';}
+.icn-iphone:before{content:'\0070';}
+.icn-home:before{content:'\0071';}
+.icn-move:before{content:'\0072';}
+.icn-healthcare:before{content:'\0073';}
+.icn-na:before{content:'\0074';}
+.icn-tag:before{content:'\0075';}
+.icn-refresh:before{content:'\0076';}
+.icn-process-analytics:before{content:'\0077';}
+.icn-risk-management:before{content:'\0078';}
+.icn-mixture:before{content:'\0079';}
+.icn-log-file:before{content:'\007a';}
+.icn-script:before{content:'\0030';}
+.icn-stream-lake:before{content:'\0031';}
+.icn-wire-data:before{content:'\0032';}
+.icn-universal-collection:before{content:'\0033';}
+.icn-download:before{content:'\0034';}
+.icn-toggle-up:before{content:'\0035';}
+.icn-toggle-down:before{content:'\0036';}
+.icn-enhanced-search:before{content:'\0037';}
+.icn-process-fork:before{content:'\0038';}
+.icn-cloud:before{content:'\0039';}
+.icn-load-balancer:before{content:'\0021';}
+.icn-datastore:before{content:'\0022';}
+.icn-datastores:before{content:'\0023';}
+.icn-router:before{content:'\0024';}
+.icn-cluster-management:before{content:'\0025';}
+.icn-datacenter:before{content:'\0026';}
+.icn-datacenters:before{content:'\0027';}
+.icn-server:before{content:'\0028';}
+.icn-virtual-indexer:before{content:'\0029';}
+.icn-indexer:before{content:'\002a';}
+.icn-forwarder:before{content:'\002b';}
+.icn-forwarder-management:before{content:'\002c';}
+.icn-search-head:before{content:'\002d';}
+.icn-pivot:before{content:'\002e';}
+.icn-network-switch:before{content:'\002f';}
+.icn-stop:before{content:'\005b';}
+.icn-alert:before{content:'\005c';}
+.icn-checkmark:before{content:'\005d';}
+.icn-delete:before{content:'\005e';}
+.icn-bug:before{content:'\005f';}
+.icn-packaged-malware:before{content:'\0060';}
+.icn-malware:before{content:'\007b';}
+.icn-botnet:before{content:'\007c';}
+.icn-virus:before{content:'\007d';}
+.icn-attacker-general:before{content:'\007e';}
+.icn-attacker-internal:before{content:'\003f';}
+/* end webfont glyphs */
+/* end color definitions for button identifier glyphs */
+
+
+/* Original
+.html .showsource-container {
+  margin: 0 -10px;
+}
+.example-info {
+  margin: 0 0 15px 15px;
+}
+.example-info li>p {
+  margin: 0;
+}
+.dashboard-body {
+  padding-bottom: 20px;
+}
+.sourcecode-viewer .dashboard-description {
+  background: #fff;
+  border-top: 1px solid #ccc;
+  padding: 0 20px;
+}
+.sourcecode-viewer .description-title {
+  margin: 15px 0 0 15px;
+}
+.sourcecode-viewer {
+  background: #fff;
+}
+.showsource-container .nav {
+  margin-bottom: 0;
+}
+.showsource-container .nav li.nav-title {
+  border: 1px solid #ccc;
+  border-left: none;
+  height: 14px;
+  margin-right: -5px;
+  z-index: 5;
+  color: #000;
+  background-color: #f4f4f4;
+  background-image: -moz-linear-gradient(top, #f8f8f8, #eeeeee);
+  background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#f8f8f8), to(#eeeeee));
+  background-image: -webkit-linear-gradient(top, #f8f8f8, #eeeeee);
+  background-image: -o-linear-gradient(top, #f8f8f8, #eeeeee);
+  background-image: linear-gradient(to bottom, #f8f8f8, #eeeeee);
+  background-repeat: repeat-x;
+  filter: progid: DXImageTransform.Microsoft.gradient(startColorstr='#fff8f8f8', endColorstr='#ffeeeeee', GradientType=0);
+  padding: 5px 17px 5px 24px;
+  font-weight: bold;
+}
+.showsource-container .nav li.nav-title::before, .showsource-container .nav li.nav-title::after {
+  display: none;
+}
+.showsource-container .prettyprint {
+  background: #fff;
+  border: none;
+  border-bottom: 1px solid #aeaeae;
+  border-radius: 0;
+  -webkit-border-radius: 0;
+  -moz-border-radius: 0;
+  -ms-border-radius: 0;
+}
+.prettyprint code, pre {
+  font-size: 12px;
+}
+.showsource-container .nav-tabs {
+padding-left: 55px;
+}
+.showsource-container .nav-tabs > li.active > a {
+  background: #f7f7f9;
+}
+.tab-pane.error {
+  padding: 25px;
+}
+code.inline {
+  padding: 2px 4px;
+}
+.showsource-container h5 {
+  padding-left: 15px;
+  padding-bottom: 10px;
+}
+.empty-dashboard {
+  display: none;
+}  */
+/* Special Table Declarations */
+#p_cause .dashboard-row .dashboard-panel .panel-body .string {
+  font-size: 20px !important;
+}
+.p-desc {
+  padding: 8px 0px 6px 15px;
+  float:left;
+}

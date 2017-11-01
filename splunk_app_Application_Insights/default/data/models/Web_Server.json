@@ -1,0 +1,457 @@
+{
+	"modelName" : "Web_Server",
+	"displayName" : "Web Server",
+	"description" : "Web Server Datamodel",
+	"editable" : false,
+	"objects" : [
+		{
+			"objectName" : "Inventory",
+			"displayName" : "Inventory",
+			"parentName" : "BaseEvent",
+			"fields" : [
+				{
+					"fieldName" : "site",
+					"displayName" : "site",
+					"type" : "string",
+					"fieldSearch" : "",
+					"required" : false,
+					"multivalue" : false,
+					"hidden" : false
+				},
+				{
+					"fieldName" : "web_server",
+					"displayName" : "web_server",
+					"type" : "string",
+					"fieldSearch" : "",
+					"required" : false,
+					"multivalue" : false,
+					"hidden" : false
+				},
+				{
+					"fieldName" : "vendor",
+					"displayName" : "vendor",
+					"type" : "string",
+					"fieldSearch" : "",
+					"required" : false,
+					"multivalue" : false,
+					"hidden" : false
+				},
+				{
+					"fieldName" : "vendor_product",
+					"displayName" : "vendor_product",
+					"type" : "string",
+					"fieldSearch" : "",
+					"required" : false,
+					"multivalue" : false,
+					"hidden" : false
+				},
+				{
+					"fieldName" : "version",
+					"displayName" : "version",
+					"type" : "string",
+					"fieldSearch" : "",
+					"required" : false,
+					"multivalue" : false,
+					"hidden" : false
+				},
+				{
+					"fieldName" : "dest",
+					"displayName" : "dest",
+					"type" : "string",
+					"fieldSearch" : "",
+					"required" : false,
+					"multivalue" : false,
+					"hidden" : false
+				},
+				{
+					"fieldName" : "dest_ip",
+					"displayName" : "dest_ip",
+					"type" : "string",
+					"fieldSearch" : "",
+					"required" : false,
+					"multivalue" : false,
+					"hidden" : false
+				},
+				{
+					"fieldName" : "dest_port",
+					"displayName" : "dest_port",
+					"type" : "number",
+					"fieldSearch" : "",
+					"required" : false,
+					"multivalue" : false,
+					"hidden" : false
+				}
+			],
+			"calculations" : [
+				{
+					"calculationID" : "Inventory_webserver_role",
+					"calculationType" : "Eval",
+					"outputFields" : [
+						{
+							"fieldName" : "role",
+							"displayName" : "role",
+							"type" : "string",
+							"fieldSearch" : "",
+							"required" : false,
+							"multivalue" : false,
+							"hidden" : false
+						}
+					],
+					"expression" : "\"web_server\""
+				}
+			],
+			"constraints" : [
+				{
+					"search" : "tag=web tag=inventory"
+				}
+			],
+			"lineage" : "Inventory"
+		},
+		{
+			"objectName" : "Activity",
+			"displayName" : "Activity",
+			"parentName" : "BaseEvent",
+			"fields" : [
+				{
+					"fieldName" : "web_server",
+					"displayName" : "web_server",
+					"type" : "string",
+					"fieldSearch" : "",
+					"required" : false,
+					"multivalue" : false,
+					"hidden" : false
+				},
+				{
+					"fieldName" : "availability",
+					"displayName" : "availability",
+					"type" : "number",
+					"fieldSearch" : "",
+					"required" : false,
+					"multivalue" : false,
+					"hidden" : false
+				},
+				{
+					"fieldName" : "status",
+					"displayName" : "status",
+					"type" : "number",
+					"fieldSearch" : "",
+					"required" : false,
+					"multivalue" : false,
+					"hidden" : false
+				},
+				{
+					"fieldName" : "response_time",
+					"displayName" : "response_time",
+					"type" : "number",
+					"fieldSearch" : "",
+					"required" : false,
+					"multivalue" : false,
+					"hidden" : false
+				},
+				{
+					"fieldName" : "bytes_in",
+					"displayName" : "bytes_in",
+					"type" : "number",
+					"fieldSearch" : "",
+					"required" : false,
+					"multivalue" : false,
+					"hidden" : false
+				},
+				{
+					"fieldName" : "bytes_out",
+					"displayName" : "bytes_out",
+					"type" : "number",
+					"fieldSearch" : "",
+					"required" : false,
+					"multivalue" : false,
+					"hidden" : false
+				},
+				{
+					"fieldName" : "src",
+					"displayName" : "src",
+					"type" : "string",
+					"fieldSearch" : "",
+					"required" : false,
+					"multivalue" : false,
+					"hidden" : false
+				},
+				{
+					"fieldName" : "src_ip",
+					"displayName" : "src_ip",
+					"type" : "string",
+					"fieldSearch" : "",
+					"required" : false,
+					"multivalue" : false,
+					"hidden" : false
+				},
+				{
+					"fieldName" : "http_user_agent",
+					"displayName" : "http_user_agent",
+					"type" : "string",
+					"fieldSearch" : "",
+					"required" : false,
+					"multivalue" : false,
+					"hidden" : false
+				},
+				{
+					"fieldName" : "http_method",
+					"displayName" : "http_method",
+					"type" : "string",
+					"fieldSearch" : "",
+					"required" : false,
+					"multivalue" : false,
+					"hidden" : false
+				},
+				{
+					"fieldName" : "uri_path",
+					"displayName" : "uri_path",
+					"type" : "string",
+					"fieldSearch" : "",
+					"required" : false,
+					"multivalue" : false,
+					"hidden" : false
+				},
+				{
+					"fieldName" : "uri_query",
+					"displayName" : "uri_query",
+					"type" : "string",
+					"fieldSearch" : "",
+					"required" : false,
+					"multivalue" : false,
+					"hidden" : false
+				},
+				{
+					"fieldName" : "site",
+					"displayName" : "site",
+					"type" : "string",
+					"fieldSearch" : "",
+					"required" : false,
+					"multivalue" : false,
+					"hidden" : false
+				},
+				{
+					"fieldName" : "action",
+					"displayName" : "action",
+					"type" : "string",
+					"fieldSearch" : "",
+					"required" : false,
+					"multivalue" : false,
+					"hidden" : false
+				},
+				{
+					"fieldName" : "app",
+					"displayName" : "app",
+					"type" : "string",
+					"fieldSearch" : "",
+					"required" : false,
+					"multivalue" : false,
+					"hidden" : false
+				},
+				{
+					"fieldName" : "bytes",
+					"displayName" : "bytes",
+					"type" : "number",
+					"fieldSearch" : "",
+					"required" : false,
+					"multivalue" : false,
+					"hidden" : false
+				},
+				{
+					"fieldName" : "cached",
+					"displayName" : "cached",
+					"type" : "string",
+					"fieldSearch" : "",
+					"required" : false,
+					"multivalue" : false,
+					"hidden" : false
+				},
+				{
+					"fieldName" : "category",
+					"displayName" : "category",
+					"type" : "string",
+					"fieldSearch" : "",
+					"required" : false,
+					"multivalue" : false,
+					"hidden" : false
+				},
+				{
+					"fieldName" : "cookie",
+					"displayName" : "cookie",
+					"type" : "string",
+					"fieldSearch" : "",
+					"required" : false,
+					"multivalue" : false,
+					"hidden" : false
+				},
+				{
+					"fieldName" : "http_content_type",
+					"displayName" : "http_content_type",
+					"type" : "string",
+					"fieldSearch" : "",
+					"required" : false,
+					"multivalue" : false,
+					"hidden" : false
+				},
+				{
+					"fieldName" : "http_referer",
+					"displayName" : "http_referer",
+					"type" : "string",
+					"fieldSearch" : "",
+					"required" : false,
+					"multivalue" : false,
+					"hidden" : false
+				},
+				{
+					"fieldName" : "url",
+					"displayName" : "url",
+					"type" : "string",
+					"fieldSearch" : "",
+					"required" : false,
+					"multivalue" : false,
+					"hidden" : false
+				},
+				{
+					"fieldName" : "url_length",
+					"displayName" : "url_length",
+					"type" : "number",
+					"fieldSearch" : "",
+					"required" : false,
+					"multivalue" : false,
+					"hidden" : false
+				},
+				{
+					"fieldName" : "connection",
+					"displayName" : "connection",
+					"type" : "string",
+					"fieldSearch" : "",
+					"required" : false,
+					"multivalue" : false,
+					"hidden" : false
+				},
+				{
+					"fieldName" : "http_version",
+					"displayName" : "http_version",
+					"type" : "string",
+					"fieldSearch" : "",
+					"required" : false,
+					"multivalue" : false,
+					"hidden" : false
+				},
+				{
+					"fieldName" : "data_center_time",
+					"displayName" : "data_center_time",
+					"type" : "string",
+					"fieldSearch" : "",
+					"required" : false,
+					"multivalue" : false,
+					"hidden" : false
+				},
+				{
+					"fieldName" : "form_data",
+					"displayName" : "form_data",
+					"type" : "string",
+					"fieldSearch" : "",
+					"required" : false,
+					"multivalue" : false,
+					"hidden" : false
+				},
+				{
+					"fieldName" : "reply_time",
+					"displayName" : "reply_time",
+					"type" : "number",
+					"fieldSearch" : "",
+					"required" : false,
+					"multivalue" : false,
+					"hidden" : false
+				},
+				{
+					"fieldName" : "request_time",
+					"displayName" : "request_time",
+					"type" : "number",
+					"fieldSearch" : "",
+					"required" : false,
+					"multivalue" : false,
+					"hidden" : false
+				},
+				{
+					"fieldName" : "ssl_version",
+					"displayName" : "ssl_version",
+					"type" : "string",
+					"fieldSearch" : "",
+					"required" : false,
+					"multivalue" : false,
+					"hidden" : false
+				},
+				{
+					"fieldName" : "url_param",
+					"displayName" : "url_param",
+					"type" : "string",
+					"fieldSearch" : "",
+					"required" : false,
+					"multivalue" : false,
+					"hidden" : false
+				},
+				{
+					"fieldName" : "duration",
+					"displayName" : "duration",
+					"type" : "number",
+					"fieldSearch" : "",
+					"required" : false,
+					"multivalue" : false,
+					"hidden" : false
+				},
+				{
+					"fieldName" : "user",
+					"displayName" : "user",
+					"type" : "string",
+					"fieldSearch" : "",
+					"required" : false,
+					"multivalue" : false,
+					"hidden" : false
+				},
+				{
+					"fieldName" : "encoding",
+					"displayName" : "encoding",
+					"type" : "string",
+					"fieldSearch" : "",
+					"required" : false,
+					"multivalue" : false,
+					"hidden" : false
+				},
+				{
+					"fieldName" : "client_packets",
+					"displayName" : "client_packets",
+					"type" : "number",
+					"fieldSearch" : "",
+					"required" : false,
+					"multivalue" : false,
+					"hidden" : false
+				},
+				{
+					"fieldName" : "server_packets",
+					"displayName" : "server_packets",
+					"type" : "number",
+					"fieldSearch" : "",
+					"required" : false,
+					"multivalue" : false,
+					"hidden" : false
+				},
+				{
+					"fieldName" : "src_port",
+					"displayName" : "src_port",
+					"type" : "number",
+					"fieldSearch" : "",
+					"required" : false,
+					"multivalue" : false,
+					"hidden" : false
+				}
+			],
+			"calculations" : [],
+			"constraints" : [
+				{
+					"search" : "tag=web tag=activity"
+				}
+			]
+		}
+	]
+}

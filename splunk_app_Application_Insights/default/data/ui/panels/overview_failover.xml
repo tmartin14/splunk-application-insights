@@ -1,0 +1,11 @@
+<panel>
+  <single>
+    <title>Failover Status</title>
+    <search>
+      <query>| savedsearch DA-ITSI-LB-Failover host="$host$"</query>
+      <earliest>$earliest$</earliest>
+      <latest>$latest$</latest>
+    </search>
+    <option name="field">latest_failover</option>
+  </single>
+</panel>

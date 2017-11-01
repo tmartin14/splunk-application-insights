@@ -1,0 +1,150 @@
+<dashboard>
+  <label>About</label>
+  <row>
+    <panel>
+      <html>
+    <style>
+        .header  { font-size: 18px; line-height:30px;font-weight:bold;  text-align:center; text-decoration: underline;  }
+        table    { border:solid 4px; border-collapse:collapse; table-layout:fixed; width:100%;}
+        table td { border:solid 2px; word-wrap:hidden;overflow: scroll; vertical-align:top; padding: 20px; 
+                    font-size: 13px;}
+        table th { border:solid 2px; word-wrap:hidden;overflow: scroll; vertical-align:top; align:right; 
+                   font-size:18px; line-height:30px;  background-color:rgb(101, 166, 55); color: white;
+                   border: 2px solid black;}
+
+        table tr {  }
+        
+        .code{ overflow: visible; 
+               font-family:Consolas, "Liberation Mono", Menlo, Courier, monospace;
+               font-size:12px;
+               line-height:11px;
+               color:darkblue;
+               word-wrap:normal;
+               white-space:pre;
+               padding-right:10px;
+               padding-left:10px;
+               vertical-align:top;
+        }
+        
+        .subhead { border:solid 2px; word-wrap:hidden;overflow: scroll; vertical-align:center; align:center; 
+             font-size:12px; line-height:20px;  background-color:rgb(101, 166, 55); color: white; solid black;}
+
+        
+        img {  display: block; border: 2px solid gray;  margin: 3px;  padding: 3px; max-width: 98%;}  
+
+        div.box-container {  border: 2px solid gray;  margin: 5px;  padding: 5px; max-width: 70%; } 
+    </style>
+    <table>
+      <tr>
+          <th width="100%">Splunk Insights for Application Monitoring</th>
+      </tr>
+      <tr>
+          <td>
+            This application brings data together for various components involved in delivering an application to your end users to provide a high level monitoring overview. The app allows you to quickly see an overview of the health of your operating systems as well as the performance of your load balancers, web servers and application servers. The inputs for this app are the same as the inputs required for Splunk IT Service Intelligence (ITSI)! One of the goals of this application is to provide an easy on-ramp for your ITSI journey.  
+            <br/><br/>
+            There is also a "Triage" dashboard to help you identify patterns and trends in your data regardless of the data source.  You can look for clusters of events and see what preceeding them to give you a headstart on determining root cause and get to resolution more quickly.
+            <br/><br/>
+
+            The Technology Add-on's used in this app are freely downloadable from <a href="http://splunkbase.splunk.com" target="_blank">Splunkbase</a>. Here are the major Add-ons that can be used to feed the Splink Insights for Application Monitoring app:
+            <br/><br/>
+          <table>
+            <tr>
+              <th width="30%">Add-On</th><th width="15%">Documentation</th><th width="55%">Notes</th>
+            </tr>
+            <tr>
+              <td><a target="_blank" href="https://splunkbase.splunk.com/app/833/">Splunk Add-on for Unix and Linux</a> </td>
+              <td><a target="_blank" href="http://docs.splunk.com/Documentation/UnixAddOn/5.2.4/User/AbouttheSplunkAdd-onforUnixandLinux">Documentation</a></td>
+              <td>Enable the following scripts:   bandwidth, cpu, df, vmstat, iostat, top, ps. </td>
+            </tr>
+           <tr>
+              <td><a target="_blank" href="https://splunkbase.splunk.com/app/742/">Splunk Add-on for Microsoft Windows</a></td>
+              <td><a target="_blank" href="http://docs.splunk.com/Documentation/WindowsAddOn/latest/User/AbouttheSplunkAdd-onforWindows">Documentation</a></td>
+              <td>Enable WinHostMon for OS, processor and disk.  Enable perfomon for cpu, system, logical disk, memory and network.</td>
+            </tr>
+           <tr>
+              <td><a target="_blank" href="https://splunkbase.splunk.com/app/3186/">Splunk Add-on for Apache Web Server</a></td>
+              <td><a target="_blank" href="http://docs.splunk.com/Documentation/AddOns/released/ApacheWebServer/Configure">Documentation</a></td>
+              <td>Modify log file format on apache servers and add file inputs for log files </td>
+            </tr>
+           <tr>
+              <td><a target="_blank" href="https://splunkbase.splunk.com/app/3185/">Splunk Add-on for Microsoft IIS</a></td>
+              <td><a target="_blank" href="http://docs.splunk.com/Documentation/AddOns/released/MSIIS/Setupaddon">Documentation</a></td>
+              <td> </td>
+            </tr>
+           <tr>
+              <td><a target="_blank" href="https://splunkbase.splunk.com/app/2680/">Splunk Add-on for F5 Big-IP</a></td>
+              <td><a target="_blank" href="http://docs.splunk.com/Documentation/AddOns/released/F5BIGIP/About">Documentation</a></td>
+              <td> </td>
+            </tr>
+           <tr>
+              <td><a target="_blank" href="https://splunkbase.splunk.com/app/2770/">Splunk Add-on for Citrix Netscaler </a></td>
+              <td><a target="_blank" href="http://docs.splunk.com/Documentation/AddOns/released/CitrixNetScaler/About">Documentation</a></td>
+              <td> </td>
+            </tr>
+           <tr>
+              <td><a target="_blank" href="https://splunkbase.splunk.com/app/2647/">Splunk Add-on for Java Management Extensions (JMX)</a></td>
+              <td><a target="_blank" href="http://docs.splunk.com/Documentation/AddOns/latest/JMX/About">Documentation</a></td>
+              <td>1. Set JAVA_HOME <br/>
+                  2. <a target="_blank" href="http://docs.splunk.com/Documentation/AddOns/released/JMX/SetupJMXservers">Prepare your JVM for the Add-On </a><br/>
+                  3. <a target="_blank" href="http://docs.splunk.com/Documentation/AddOns/released/JMX/Configureinput">Enable JMX </a> -  Configure Servers, Templates and Tasks thru Splunk Web </td>
+            </tr>
+           <tr>
+              <td><a target="_blank" href="https://splunkbase.splunk.com/app/2911/">Splunk Add-on for Tomcat </a></td>
+              <td><a target="_blank" href="http://docs.splunk.com/Documentation/AddOns/released/Tomcat/Install">Documentation</a></td>
+              <td>Requires the JMX add-on be installed and configured first.   Once completed, then ...<br/>
+                  1. Setup the Add-on (execute lookups through Splunk Web)<br/>
+                  2. <a target="_blank" href="http://docs.splunk.com/Documentation/AddOns/released/Tomcat/Setup">Add file inputs for the log files</a> <br/>
+                  3. <a target="_blank" href="http://docs.splunk.com/Documentation/AddOns/released/Tomcat/Configureinputs2">Enable the Add-On </a>
+              </td>
+            </tr>
+           <tr>
+              <td><a target="_blank" href="https://splunkbase.splunk.com/app/2789/">Splunk Add-on for IBM Websphere Application Server </a></td>
+              <td><a target="_blank" href="http://docs.splunk.com/Documentation/AddOns/released/IBMWAS/About">Documentation</a></td>
+              <td>1.Copy WebSphere jar files into the JMX TA's /bin/lib directory<br/>
+                  2.	<a target="_blank" href="http://docs.splunk.com/Documentation/AddOns/released/IBMWAS/Configureinputs">Configure JMX inputs for  WebSphere</a> <br/>
+              </td>
+            </tr>
+            <tr>
+              <td colspan="3"> <b>Supporting Add-ons</b>  </td>
+            </tr>
+            <tr>
+              <td><a target="_blank" href="https://splunkbase.splunk.com/app/1621/">Splunk Common Information Model (CIM)</a></td>
+              <td><a target="_blank" href="http://docs.splunk.com/Documentation/CIM/latest/User/Overview">Documentation</a></td>
+              <td>The Common Information Model is a set of field names and tags which are expected to define the least common denominator of a given domain (web, app server, OS host, etc.). </td>
+            </tr>           
+            <tr>
+              <td><a target="_blank" href="https://splunkbase.splunk.com/app/1843/">TA-user-Agents</a></td>
+              <td><a target="_blank" href="https://splunkbase.splunk.com/app/1843/#/details">Documentation</a></td>
+              <td>This TA will decode Browser user agent strings into their components (browser type, version, etc.) </td>
+            </tr>           
+            <tr>
+              <td><a target="_blank" href="https://splunkbase.splunk.com/app/1724/">Lookup File Editor</a></td>
+              <td><a target="_blank" href="https://splunkbase.splunk.com/app/1724/#/details">Documentation</a></td>
+              <td>This is a nice utiltiy to edit any lookup files you might have in your Splunk instance. </td>
+            </tr>           
+<!--
+           <tr>
+              <td><a target="_blank" href=""></a></td>
+              <td><a target="_blank" href="">Documentation</a></td>
+              <td> </td>
+            </tr>
+-->
+          </table>
+        </td>
+      </tr>
+</table>
+
+<!--
+      <tr>
+        <td>
+         <br />
+         <code>sourcetype="tomcat:jmx:xxxxxx"</code>
+         <br /><img src="/static/app/splunk_app_New_Relic/NewRelic_New_Input.png" />
+          </td>
+      </tr>
+-->
+
+      </html>
+    </panel>
+  </row>
+</dashboard>

@@ -1,0 +1,310 @@
+<form>
+  <label>Operating Systems</label>
+  <description>Insight into the performance of your operating systems</description>
+  <search id="os" ref="base_search_os">
+    <earliest>$myTime.earliest$</earliest>
+    <latest>$myTime.latest$</latest>
+    <refresh>$refresh_token$</refresh>
+    <refreshType>delay</refreshType>
+  </search>
+  <fieldset submitButton="false">
+    <input type="time" token="myTime" searchWhenChanged="true">
+      <label>Time Period</label>
+      <default>
+        <earliest>-15m</earliest>
+        <latest>now</latest>
+      </default>
+    </input>
+    <input type="dropdown" token="host">
+      <label>Hosts</label>
+      <fieldForLabel>host</fieldForLabel>
+      <fieldForValue>host</fieldForValue>
+      <search base="os">
+        <query> | dedup host | table host</query>
+        <earliest>-7d@h</earliest>
+        <latest>now</latest>
+      </search>
+      <choice value="*">All</choice>
+      <default>*</default>
+      <initialValue>*</initialValue>
+    </input>
+  </fieldset>
+  <row>
+    <panel>
+      <chart>
+        <title>CPU (%) &amp; Queue Length (count)</title>
+        <search base="os">
+          <query>
+| search host=$host$  
+| timechart eval(round(avg(cpu_load_percent), 2)) as "CPU Usage (%)", eval(round(avg(wait_threads_count), 2)) as "Queue Length"</query>
+        </search>
+        <!--  <option
+        name="charting.axisLabelsX.majorLabelVisibility">hide</option> -->
+        <option name="charting.axisTitleX.visibility">collapsed</option>
+        <option name="charting.axisTitleY.visibility">collapsed</option>
+        <option name="charting.axisY.maximumNumber">100</option>
+        <option name="charting.axisY2.enabled">1</option>
+        <option name="charting.chart">area</option>
+        <option name="charting.chart.nullValueMode">connect</option>
+        <option name="charting.chart.overlayFields">"Queue Length"</option>
+        <option name="charting.chart.showDataLabels">none</option>
+        <option name="charting.legend.placement">top</option>
+        <option name="refresh.display">progressbar</option>
+        <option name="refresh.time.visible">0</option>
+      </chart>
+    </panel>
+    <panel>
+      <chart>
+        <title>Memory Used (%)</title>
+        <search base="os">
+          <query>| search host=$host$  
+| eval mem_used_percent = 100 - mem_free_percent 
+| timechart eval(round(avg(mem_used_percent), 2)) as "Memory Used (%)"</query>
+        </search>
+        <!--  <option name="charting.axisLabelsX.majorLabelVisibility">hide</option> -->
+        <option name="charting.axisTitleX.visibility">collapsed</option>
+        <option name="charting.axisTitleY.visibility">collapsed</option>
+        <option name="charting.axisY.maximumNumber">100</option>
+        <option name="charting.chart">area</option>
+        <option name="charting.chart.nullValueMode">connect</option>
+        <option name="charting.chart.showDataLabels">none</option>
+        <option name="charting.legend.placement">top</option>
+        <option name="refresh.display">progressbar</option>
+        <option name="refresh.time.visible">0</option>
+      </chart>
+    </panel>
+    <panel id="storage_volume_most_used">
+      <chart>
+        <title>Storage Free Space (by Volume)</title>
+        <search base="os">
+          <query>| search host=* 
+| stats  avg(storage_free_percent) as "Free (%)", avg(storage_used_percent) as "Used (%)" by Filesystem</query>
+        </search>
+        <option name="charting.chart">column</option>
+        <option name="charting.chart.stackMode">stacked100</option>
+        <option name="charting.drilldown">all</option>
+        <option name="charting.legend.placement">top</option>
+        <option name="refresh.display">progressbar</option>
+        <option name="refresh.time.visible">0</option>
+      </chart>
+    </panel>
+    <panel>
+      <chart>
+        <title>Network Bandwidth (KB/sec)</title>
+        <search base="os">
+          <query>| search host=$host$ 
+| eval bytes_in = bytes_in/1024, bytes_out = bytes_out/1024 
+| timechart eval(round(avg(bytes_in), 2)) as "Inbound (KB/s)" eval(round(avg(bytes_out), 2)) as "Outbound (KB/s)"</query>
+        </search>
+        <!--  <option name="charting.axisLabelsX.majorLabelVisibility">hide</option> -->
+        <option name="charting.axisTitleX.visibility">collapsed</option>
+        <option name="charting.chart">area</option>
+        <option name="charting.chart.nullValueMode">connect</option>
+        <option name="charting.chart.showDataLabels">none</option>
+        <option name="charting.chart.stackMode">stacked</option>
+        <option name="charting.legend.placement">top</option>
+        <option name="refresh.display">progressbar</option>
+        <option name="refresh.time.visible">0</option>
+      </chart>
+    </panel>
+  </row>
+  <row>
+    <panel>
+      <table>
+        <title>Top 10 CPU Consumers</title>
+        <search>
+          <query>index=* host=$host$ tag=oshost tag=performance tag=process (process_mem_used=* OR process_cpu_used_percent=* OR process_name=*) 
+| addinfo 
+| where _time &gt; relative_time(min(info_max_time, now()), "-2m") 
+| eval process_mem_used=round(process_mem_used/1024.0/1024.0, 2) 
+| eval process_cpu_used_percent=round(process_cpu_used_percent, 2) 
+| rename process_name as Process 
+| stats latest(process_cpu_used_percent) as "CPU Used (%)", latest(process_mem_used) as "Memory Used (MB)" by Process 
+| sort limit=10 -"CPU Used (%)"</query>
+          <earliest>$myTime.earliest$</earliest>
+          <latest>$myTime.latest$</latest>
+        </search>
+        <option name="count">10</option>
+        <option name="dataOverlayMode">none</option>
+        <option name="drilldown">cell</option>
+        <option name="refresh.time.visible">0</option>
+        <option name="rowNumbers">false</option>
+        <option name="wrap">true</option>
+      </table>
+    </panel>
+    <panel>
+      <table>
+        <title>Top 10 Memory Consumers</title>
+        <search>
+          <query>index=* host=$host$ tag=oshost tag=performance tag=process (process_mem_used=* OR process_cpu_used_percent=* OR process_name=*) 
+| addinfo 
+| where _time &gt; relative_time(min(info_max_time, now()), "-2m") 
+| eval process_mem_used=round(process_mem_used/1024.0/1024.0, 2) 
+| eval process_cpu_used_percent=round(process_cpu_used_percent, 2) 
+| rename process_name as Process 
+| stats latest(process_cpu_used_percent) as "CPU %", latest(process_mem_used) as "Memory (MB)" by Process 
+| sort limit=10 -"Memory (MB)"</query>
+          <earliest>$myTime.earliest$</earliest>
+          <latest>$myTime.latest$</latest>
+        </search>
+        <option name="count">10</option>
+        <option name="dataOverlayMode">none</option>
+        <option name="drilldown">cell</option>
+        <option name="refresh.time.visible">0</option>
+        <option name="rowNumbers">false</option>
+        <option name="wrap">true</option>
+      </table>
+    </panel>
+    <panel>
+      <chart>
+        <title>Storage Used (GB) w/Prediciton</title>
+        <search base="os">
+          <query>| search host=$host$ 
+| timechart eval(round(avg(storage_used_percent), 2)) as "Disk Space Used (%)"
+| predict "Disk Space Used (%)" as "predicted Usage (%)" future_timespan=14</query>
+          <refresh>$refresh_token$</refresh>
+          <refreshType>delay</refreshType>
+        </search>
+        <!--  <option name="charting.axisLabelsX.majorLabelVisibility">hide</option> -->
+        <option name="charting.axisTitleX.visibility">collapsed</option>
+        <option name="charting.chart">area</option>
+        <option name="charting.chart.nullValueMode">connect</option>
+        <option name="charting.chart.showDataLabels">none</option>
+        <option name="charting.chart.stackMode">stacked</option>
+        <option name="charting.legend.placement">top</option>
+        <option name="refresh.display">progressbar</option>
+        <option name="refresh.time.visible">0</option>
+      </chart>
+    </panel>
+    <panel>
+      <chart>
+        <title>Network Bandwidth (packets/sec)</title>
+        <search base="os">
+          <query>| search host=$host$ 
+| timechart eval(round(avg(packets_in), 2)) as "Inbound (Packets/s)", eval(round(avg(packets_out), 2)) as "Outbound (Packets/s)"</query>
+        </search>
+        <option name="charting.chart">area</option>
+        <!--   <option name="charting.axisLabelsX.majorLabelVisibility">hide</option> -->
+        <option name="charting.axisTitleX.visibility">collapsed</option>
+        <option name="charting.chart.nullValueMode">connect</option>
+        <option name="charting.chart.showDataLabels">none</option>
+        <option name="charting.legend.placement">top</option>
+        <option name="charting.chart.stackMode">stacked</option>
+        <option name="refresh.time.visible">false</option>
+      </chart>
+    </panel>
+  </row>
+  <row>
+    <panel>
+      <chart>
+        <title>System Threads (count)</title>
+        <search base="os">
+          <query>| search host=$host$
+| timechart eval(round(avg(system_threads_count), 2)) as "Thread Count"</query>
+        </search>
+        <!--     <option name="charting.axisLabelsX.majorLabelVisibility">hide</option> -->
+        <option name="charting.axisTitleX.visibility">collapsed</option>
+        <option name="charting.axisTitleY.visibility">collapsed</option>
+        <option name="charting.chart">area</option>
+        <option name="charting.chart.nullValueMode">connect</option>
+        <option name="charting.chart.showDataLabels">none</option>
+        <option name="charting.legend.placement">top</option>
+        <option name="refresh.display">progressbar</option>
+        <option name="refresh.time.visible">0</option>
+      </chart>
+    </panel>
+    <panel>
+      <table>
+        <title>Filesystems</title>
+        <search>
+          <query>index=* host=$host$ tag=oshost tag=performance tag=storage 
+(storage_free_percent=* OR storage=* storage_used=* OR mount=*) 
+
+| stats latest(Avail) as Available latest(PercentFreeSpace) as "% Free" latest(Size) as "Total Size" latest(Used) as "Used"  by mount 
+
+| rename mount as "Device" 
+| table Device "Total Size" "Used" Available "% Free"</query>
+          <earliest>$myTime.earliest$</earliest>
+          <latest>$myTime.latest$</latest>
+        </search>
+        <option name="count">10</option>
+        <option name="dataOverlayMode">none</option>
+        <option name="drilldown">cell</option>
+        <option name="refresh.time.visible">0</option>
+        <option name="rowNumbers">false</option>
+        <option name="wrap">true</option>
+      </table>
+    </panel>
+    <panel>
+      <chart>
+        <title>Storage I/O (KB/sec)</title>
+        <search base="os">
+          <query>| search host=$host$
+| timechart eval(round(avg(read_ops), 2)) as "Disk In (KB/s)", eval(round(avg(write_ops), 2)) as "Disk Out (KB/s)"</query>
+        </search>
+        <!--  <option name="charting.axisLabelsX.majorLabelVisibility">hide</option> -->
+        <option name="charting.axisTitleX.visibility">collapsed</option>
+        <option name="charting.chart">area</option>
+        <option name="charting.chart.nullValueMode">connect</option>
+        <option name="charting.chart.showDataLabels">none</option>
+        <option name="charting.chart.stackMode">stacked</option>
+        <option name="charting.legend.placement">top</option>
+        <option name="refresh.display">progressbar</option>
+        <option name="refresh.time.visible">0</option>
+      </chart>
+    </panel>
+    <panel>
+      <chart>
+        <title>Network Bandwidth (KB/sec) w/Prediction</title>
+        <search base="os">
+          <query>| search host=$host$ 
+| eval bytes_in = bytes_in/1024, bytes_out = bytes_out/1024 
+| timechart eval(round(avg(bytes_in), 2)) as "Inbound (KB/s)" eval(round(avg(bytes_out), 2)) as "Outbound (KB/s)"
+| predict "Inbound (KB/s)", "Outbound (KB/s)" future_timespan=14</query>
+        </search>
+        <!--  <option name="charting.axisLabelsX.majorLabelVisibility">hide</option> -->
+        <option name="charting.axisTitleX.visibility">collapsed</option>
+        <option name="charting.chart">area</option>
+        <option name="charting.chart.nullValueMode">connect</option>
+        <option name="charting.chart.showDataLabels">none</option>
+        <option name="charting.chart.stackMode">stacked</option>
+        <option name="charting.legend.placement">top</option>
+        <option name="refresh.display">progressbar</option>
+        <option name="refresh.time.visible">0</option>
+      </chart>
+    </panel>
+  </row>
+  <row>
+    <panel>
+      <chart>
+        <title>Total Error Log Entries</title>
+        <search>
+          <query>host=$host$ 
+error
+index=* tag=oshost tag=performance 
+
+|timechart count(_raw) as "Error Count"</query>
+          <earliest>$myTime.earliest$</earliest>
+          <latest>$myTime.latest$</latest>
+        </search>
+        <option name="charting.axisTitleX.text">time</option>
+        <option name="charting.chart">column</option>
+        <option name="charting.data.count">0</option>
+      </chart>
+    </panel>
+    <panel>
+      <event>
+        <title>Last 10 Error Log Entries</title>
+        <search>
+          <query>host=$host$ 
+error
+index=* tag=oshost tag=performance
+
+limit=10</query>
+          <earliest>$myTime.earliest$</earliest>
+          <latest>$myTime.latest$</latest>
+        </search>
+      </event>
+    </panel>
+  </row>
+</form>

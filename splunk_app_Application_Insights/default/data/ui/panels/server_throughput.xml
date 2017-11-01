@@ -1,0 +1,18 @@
+<panel>
+  <chart>
+    <title>Server Throughput</title>
+    <search>
+      <query>| savedsearch DA-ITSI-LB-Server_Throughput host=$host$</query>
+      <earliest>$earliest$</earliest>
+      <latest>$latest$</latest>
+    </search>
+    <option name="charting.chart">area</option>
+   <!--  <option name="charting.axisLabelsX.majorLabelVisibility">hide</option> -->
+    <option name="charting.axisTitleX.visibility">collapsed</option>
+    <option name="charting.axisTitleY.visibility">collapsed</option>
+    <option name="charting.chart.nullValueMode">connect</option>
+    <option name="charting.chart.showDataLabels">none</option>
+    <option name="charting.legend.placement">top</option>
+    <option name="refresh.time.visible">false</option>
+  </chart>
+</panel>

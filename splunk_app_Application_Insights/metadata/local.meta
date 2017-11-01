@@ -1,0 +1,169 @@
+[nav/default]
+version = 6.5.2
+modtime = 1508439408.573651000
+
+[views/web_servers]
+access = read : [ * ], write : [ admin ]
+export = none
+owner = admin
+version = 7.0.0
+modtime = 1508954575.404081000
+
+[panels/test-panel]
+owner = admin
+version = 6.5.2
+modtime = 1503513098.989084000
+
+[panels/test]
+owner = admin
+version = 6.5.2
+modtime = 1503513941.868804000
+
+[panels/aaa]
+owner = admin
+version = 6.5.2
+modtime = 1503516182.076739000
+
+[panels/xxx]
+owner = admin
+version = 6.5.2
+modtime = 1503517542.412810000
+
+[views/app_servers]
+access = read : [ * ], write : [ admin ]
+export = none
+owner = admin
+version = 7.0.0
+modtime = 1509469428.342636000
+
+[views/databases]
+access = read : [ * ], write : [ admin ]
+export = none
+owner = admin
+version = 6.5.2
+modtime = 1504113852.435118000
+
+[views/operating_systems]
+access = read : [ * ], write : [ admin ]
+export = none
+owner = admin
+version = 7.0.0
+modtime = 1508954334.857613000
+
+[panels/qqq]
+owner = admin
+version = 6.5.2
+modtime = 1503575634.109010000
+
+[views/oi]
+owner = admin
+version = 6.5.2
+modtime = 1504116577.453649000
+
+[views/load_balancers]
+owner = admin
+version = 7.0.0
+modtime = 1508954201.929804000
+
+[views/triage]
+owner = admin
+version = 6.6.0
+modtime = 1508364930.303079000
+
+[savedsearches/base_search_web_server]
+access = read : [ * ], write : [ admin ]
+export = system
+owner = admin
+version = 7.0.0
+modtime = 1508877781.570662000
+
+[savedsearches/base_search_cpu]
+access = read : [ * ], write : [ admin ]
+export = system
+owner = admin
+version = 6.5.2
+modtime = 1507641501.301177000
+
+[savedsearches/base_search_memory]
+access = read : [ * ], write : [ admin ]
+export = system
+owner = admin
+version = 6.5.2
+modtime = 1507641637.007304000
+
+[savedsearches/base_search_disk]
+access = read : [ * ], write : [ admin ]
+export = system
+owner = admin
+version = 6.5.2
+modtime = 1507756436.179789000
+
+[savedsearches/base_search_load_balancer]
+access = read : [ * ], write : [ admin ]
+export = system
+owner = admin
+version = 7.0.0
+modtime = 1509458218.540768000
+
+[views/oi3]
+owner = admin
+version = 7.0.0
+modtime = 1509468830.282322000
+
+[savedsearches/base_search_app_server]
+access = read : [ * ], write : [ admin ]
+export = system
+owner = admin
+version = 7.0.0
+modtime = 1509468240.325910000
+
+[savedsearches/base_search_jmx]
+access = read : [ * ], write : [ admin ]
+export = system
+owner = admin
+version = 7.0.0
+modtime = 1509468138.702069000
+
+[savedsearches/base_search_network]
+access = read : [ * ], write : [ admin ]
+export = system
+owner = admin
+version = 6.5.2
+modtime = 1507750837.901305000
+
+[app/install/install_source_checksum]
+version = 6.6.0
+modtime = 1508362031.940632000
+
+[savedsearches/base_search_os]
+access = read : [ * ], write : [ admin ]
+export = system
+owner = admin
+version = 7.0.0
+modtime = 1509458232.831302000
+
+[views/about]
+owner = admin
+version = 6.5.2
+modtime = 1508446265.345630000
+
+[savedsearches/base_search_host_list]
+access = read : [ * ], write : [ admin ]
+export = system
+owner = admin
+version = 7.0.0
+modtime = 1509459551.719216000
+
+[savedsearches/base_search_app_server_logs]
+access = read : [ * ], write : [ admin ]
+export = system
+owner = admin
+version = 7.0.0
+modtime = 1509468126.435887000
+
+[savedsearches/base_search_appserver_jmx]
+access = read : [ * ], write : [ admin ]
+export = system
+owner = admin
+version = 7.0.0
+modtime = 1509468320.076113000

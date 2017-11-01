@@ -1,0 +1,11 @@
+<panel>
+  <single>
+    <title>Availability Status</title>
+    <search>
+      <query>| savedsearch DA-ITSI-LB-Availability host="$host$"</query>
+      <earliest>$earliest$</earliest>
+      <latest>$latest$</latest>
+    </search>
+    <option name="field">latest_availability</option>
+  </single>
+</panel>

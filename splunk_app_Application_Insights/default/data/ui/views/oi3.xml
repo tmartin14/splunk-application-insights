@@ -1,0 +1,1156 @@
+<form script="app_insights.js" stylesheet="app_insights.css">
+  <label>Overview</label>
+  <description>Visualize your Application and Infrastructure Performance metrics in a single view</description>
+  <init>
+    <set token="end2end">show</set>
+    <set token="drill_cpu">true</set>
+    <set token="drill_web">true</set>
+  </init>
+  <!--    User Inputs      -->
+  <!--         Base Searches      -->
+  <search id="hosts" ref="base_search_host_list">
+    <earliest>$myTime.earliest$</earliest>
+    <latest>$myTime.latest$</latest>
+    <refresh>$refresh_token$</refresh>
+    <refreshType>delay</refreshType>
+  </search>
+  <search id="os" ref="base_search_os">
+    <earliest>$myTime.earliest$</earliest>
+    <latest>$myTime.latest$</latest>
+    <refresh>$refresh_token$</refresh>
+    <refreshType>delay</refreshType>
+    <progress>
+      <set token="os_sid">$job.sid$</set>
+    </progress>
+  </search>
+  <search id="loadbalancer" ref="base_search_load_balancer">
+    <earliest>$myTime.earliest$</earliest>
+    <latest>$myTime.latest$</latest>
+    <refresh>$refresh_token$</refresh>
+    <refreshType>delay</refreshType>
+  </search>
+  <search id="webserver" ref="base_search_web_server">
+    <earliest>$myTime.earliest$</earliest>
+    <latest>$myTime.latest$</latest>
+    <refresh>$refresh_token$</refresh>
+    <refreshType>delay</refreshType>
+  </search>
+  <search id="appserver" ref="base_search_app_server">
+    <earliest>$myTime.earliest$</earliest>
+    <latest>$myTime.latest$</latest>
+    <refresh>$refresh_token$</refresh>
+    <refreshType>delay</refreshType>
+  </search>
+  <!-- Single Value Searches -->
+  <search base="os">
+    <query>| search host="$host$" |stats max(cpu_load_percent) as value | rangemap field=value  none=-1-0 low=0.1-59 guarded=60-69 elevated=70-79 high=80-99 severe=90-100 default=none</query>
+    <finalized>
+      <set token="value_cpu">$result.value$</set>
+      <set token="range_cpu">$result.range$</set>
+    </finalized>
+  </search>
+  <search base="os">
+    <query>| search host="$host$" | stats min(mem_free_percent) as value | rangemap field=value none=-1-0 low=0.1-69 guarded=70-79 elevated=80-89 high=90-95 severe=95-100 default=none</query>
+    <finalized>
+      <set token="value_memory">$result.value$</set>
+      <set token="range_memory">$result.range$</set>
+    </finalized>
+  </search>
+  <search base="os">
+    <query>| search host="$host$" | stats min(min_free) as value | rangemap field=value severe=0-5 high=6-10 elevated=11-20 guarded=21-30 low=31-100 default=none</query>
+    <finalized>
+      <set token="value_disk">$result.value$</set>
+      <set token="range_disk">$result.range$</set>
+    </finalized>
+  </search>
+  <search base="os">
+    <query>| search host="$host$" |stats avg(kbps_in_out_difference) as value | rangemap field=value low=0-100 guarded=101-200 elevated=201-300 high=301-400 severe=401-250000 default=none</query>
+    <finalized>
+      <set token="value_network">$result.value$</set>
+      <set token="range_network">$result.range$</set>
+    </finalized>
+  </search>
+  <search base="loadbalancer">
+    <query>| search host="$host$" | stats max(5XX_codes) as value | rangemap field=value none=-1-0 low=0-10 guarded=11-20 elevated=21-30 high=31-100 severe=100-100000000 default=low</query>
+    <finalized>
+      <set token="value_lb">$result.value$</set>
+      <set token="range_lb">$result.range$</set>
+    </finalized>
+  </search>
+  <search base="webserver">
+    <query>| search host="$host$" | stats avg(error_rate) as value | rangemap field=value low=0-5 guarded=6-10 elevated=11-20 high=21-49 severe=50-1000 default=low</query>
+    <finalized>
+      <set token="value_web">$result.value$</set>
+      <set token="range_web">$result.range$</set>
+    </finalized>
+  </search>
+  <search base="appserver">
+    <query>| search host=*  uri_path=* | eval error_rate = errors/requests*100 | stats avg(error_rate) as value | rangemap field=value low=0-5 guarded=6-10 elevated=11-20 high=21-49 severe=50-1000 default=low</query>
+    <finalized>
+      <set token="value_app">$result.value$</set>
+      <set token="range_app">$result.range$</set>
+    </finalized>
+  </search>
+  <!--
+  <search base="mysql">
+    <query>| search host=$host$ | eval db_duration=time_taken/2 | timechart span=1m partial=f avg(db_duration) as db_duration | eval value=round(db_duration)  | search value&gt;0 | sort - _time | head 1 | rangemap field=value none=0-1 low=2-199 guarded=200-449 elevated=550-799 high=800-2999 severe=3000-10000 default=none</query>
+    <preview>
+      <set token="value_db">$result.value$</set>
+      <set token="range_db">$result.range$</set>
+    </preview>
+  </search>
+  -->
+  <fieldset submitButton="false">
+    <input type="time" token="myTime" searchWhenChanged="true">
+      <label>Select a Time Range:</label>
+      <default>
+        <earliest>-15m</earliest>
+        <latest>now</latest>
+      </default>
+    </input>
+    <input type="dropdown" token="refresh_token" searchWhenChanged="true">
+      <label>Select a Refresh Rate:</label>
+      <choice value="30s">30 Seconds</choice>
+      <choice value="1m">1 Minute</choice>
+      <choice value="5m">5 Minutes</choice>
+      <choice value="1h">1 Hour</choice>
+      <choice value="0">Off</choice>
+      <default>0</default>
+      <initialValue>0</initialValue>
+    </input>
+    <input type="multiselect" token="tags" searchWhenChanged="true">
+      <label>Limit Hosts to:</label>
+      <choice value="loadbalancer">Load Balancers</choice>
+      <choice value="web">Web Servers</choice>
+      <choice value="appserver">App Servers</choice>
+      <choice value="oshost">OS Hosts</choice>
+      <prefix>(</prefix>
+      <suffix>)</suffix>
+      <valuePrefix>tag=</valuePrefix>
+      <delimiter> OR </delimiter>
+      <default>appserver,loadbalancer,web</default>
+      <initialValue>web,loadbalancer,appserver</initialValue>
+    </input>
+    <input type="dropdown" token="host" searchWhenChanged="true">
+      <label>Host</label>
+      <fieldForLabel>host</fieldForLabel>
+      <fieldForValue>host</fieldForValue>
+      <search base="hosts">
+        <query>| search $tags$ | stats values(host) by host</query>
+      </search>
+      <choice value="*">All</choice>
+      <default>*</default>
+      <initialValue>*</initialValue>
+    </input>
+  </fieldset>
+  <row>
+    <panel>
+      <title>Operating Systems</title>
+      <html>
+        	<div style="float: left; width: 25%">
+            <div class="custom-result-value icon-only $range_cpu$"> </div> 
+			      <div style="text-align: center">
+              <a style="color: #000; text-decoration: none; " href="#" data-token-json="{                     &quot;drill_cpu&quot;: true, &quot;show_cpu1&quot;: true, &quot;show_cpu2&quot;: null, &quot;show_cpu3&quot;: null,                      &quot;drill_memory&quot;: null, &quot;drill_disk&quot;: null, &quot;drill_network&quot;: null                      }">CPU<br/>(% used)
+              </a>
+            </div>
+        	</div>
+        	<div style="float: left; width: 25%">
+            <div class="custom-result-value icon-only $range_memory$"> </div>
+              <div style="text-align: center">
+              <a style="color: #000; text-decoration: none; " href="#" data-token-json="{                     &quot;drill_memory&quot;: true, &quot;show_memory1&quot;: true, &quot;show_memory2&quot;: null,                      &quot;drill_cpu&quot;: null, &quot;drill_disk&quot;: null, &quot;drill_network&quot;: null                      }">MEMORY<br/>(% used)
+              </a>
+              </div>           
+	        </div>
+        	<div style="float: left; width: 25%">
+            <div class="custom-result-value icon-only $range_disk$"> </div>
+			      <div style="text-align: center">
+              <a style="color: #000; text-decoration: none; " href="#" data-token-json="{                     &quot;drill_disk&quot;: true, &quot;show_disk1&quot;: true, &quot;show_disk2&quot;: null, &quot;show_disk3&quot;: null,                      &quot;drill_cpu&quot;: null, &quot;drill_memory&quot;: null, &quot;drill_network&quot;: null                      }">DISK<br/>(% free)
+              </a>
+            </div>         
+	        </div>
+        	<div style="float: left; width: 25%">
+            <div class="custom-result-value icon-only $range_network$"> </div>
+			      <div style="text-align: center">
+               <a style="color: #000; text-decoration: none; " href="#" data-token-json="{                     &quot;drill_network&quot;: true, &quot;show_network1&quot;: true, &quot;show_network2&quot;: null,                      &quot;drill_cpu&quot;: null, &quot;drill_memory&quot;: null, &quot;drill_disk&quot;: null                      }">NETWORK<br/>(In/Out diff)
+              </a>
+           </div>
+        	</div>
+      </html>
+    </panel>
+    <panel>
+      <title>Applications</title>
+      <html>
+        	<div style="float: left; width: 25%">
+            <div class="custom-result-value icon-only $range_lb$"> </div>
+			      <div style="text-align: center">
+              <a style="color: #000; text-decoration: none; " href="#" data-token-json="{                     &quot;drill_lb&quot;: true, &quot;show_lb1&quot;: true, &quot;show_lb2&quot;: null, &quot;show_lb3&quot;: null, &quot;show_lb4&quot;: null,                      &quot;drill_web&quot;: null, &quot;drill_app&quot;: null, &quot;drill_db&quot;: null                      }">LOAD BALANCER<br/>(5xx Errors)
+              </a>
+            </div>
+        	</div>
+        	<div style="float: left; width: 25%">
+            <div class="custom-result-value icon-only $range_web$"> </div> 
+              <div style="text-align: center">
+              <a style="color: #000; text-decoration: none; " href="#" data-token-json="{                     &quot;drill_web&quot;: true, &quot;show_web1&quot;: true, &quot;show_web2&quot;: null, &quot;show_web3&quot;: null, &quot;show_web4&quot;: null,                      &quot;drill_lb&quot;: null, &quot;drill_app&quot;: null, &quot;drill_db&quot;: null                      }">WEB SERVER<br/>(Error %)
+              </a>
+              </div>           
+	        </div>
+        	<div style="float: left; width: 25%">
+            <div class="custom-result-value icon-only $range_app$"> </div>
+			      <div style="text-align: center">
+              <a style="color: #000; text-decoration: none; " href="#" data-token-json="{                     &quot;drill_app&quot;: true, &quot;show_app1&quot;: true, &quot;show_app2&quot;: null, &quot;show_app3&quot;: null, &quot;show_app4&quot;: null, &quot;show_app5&quot;: null, &quot;show_app6&quot;: null, &quot;show_app7&quot;: null,      &quot;drill_lb&quot;: null, &quot;drill_web&quot;: null, &quot;drill_db&quot;: null                      }">APP SERVER<br/>(Error %)
+              </a>
+            </div>         
+	        </div>
+<!--
+          <div style="float: left; width: 25%">
+            <div class="custom-result-value icon-only $range_db$"> </div>
+			      <div style="text-align: center">
+              <a style="color: #000; text-decoration: none; " href="#" data-token-json="{                     &quot;drill_db&quot;: true, &quot;show_db1&quot;: true, &quot;show_db2&quot;: null, &quot;show_db3&quot;: null,                      &quot;drill_lb&quot;: null, &quot;drill_web&quot;: null, &quot;drill_app&quot;: null                      }">DATABASE
+              </a>
+           </div>
+        	</div>
+-->
+      </html>
+    </panel>
+  </row>
+  <row>
+    <panel depends="$drill_cpu$">
+      <title>CPU</title>
+      <input type="link" searchWhenChanged="true">
+        <choice value="cpu1">CPU Utilization %</choice>
+        <choice value="cpu2">CPU Queue Length</choice>
+        <choice value="cpu3">CPU Top Consumers</choice>
+        <default>cpu1</default>
+        <change>
+          <condition value="cpu1">
+            <set token="show_cpu1">true</set>
+            <unset token="show_cpu2"></unset>
+            <unset token="show_cpu3"></unset>
+          </condition>
+          <condition value="cpu2">
+            <set token="show_cpu2">true</set>
+            <unset token="show_cpu1"></unset>
+            <unset token="show_cpu3"></unset>
+          </condition>
+          <condition value="cpu3">
+            <set token="show_cpu3">true</set>
+            <unset token="show_cpu1"></unset>
+            <unset token="show_cpu2"></unset>
+          </condition>
+          <condition value="hide">
+            <unset token="show_cpu1"></unset>
+            <unset token="show_cpu2"></unset>
+            <unset token="show_cpu3"></unset>
+            <unset token="drill_cpu"></unset>
+          </condition>
+        </change>
+      </input>
+      <chart depends="$show_cpu1$">
+        <title>Average CPU Usage %</title>
+        <search base="os">
+          <query>| search host=$host$ 
+| timechart avg(cpu_load_percent) as "CPU Usage (%)"</query>
+        </search>
+        <option name="charting.axisLabelsX.majorLabelStyle.overflowMode">ellipsisNone</option>
+        <option name="charting.axisLabelsX.majorLabelStyle.rotation">0</option>
+        <option name="charting.axisTitleX.visibility">collapsed</option>
+        <option name="charting.axisTitleY.visibility">visible</option>
+        <option name="charting.axisTitleY2.visibility">visible</option>
+        <option name="charting.axisX.scale">linear</option>
+        <option name="charting.axisY.maximumNumber">100</option>
+        <option name="charting.axisY.minimumNumber">0</option>
+        <option name="charting.axisY.scale">linear</option>
+        <option name="charting.axisY2.enabled">0</option>
+        <option name="charting.axisY2.scale">inherit</option>
+        <option name="charting.chart">line</option>
+        <option name="charting.chart.bubbleMaximumSize">50</option>
+        <option name="charting.chart.bubbleMinimumSize">10</option>
+        <option name="charting.chart.bubbleSizeBy">area</option>
+        <option name="charting.chart.nullValueMode">connect</option>
+        <option name="charting.chart.sliceCollapsingThreshold">0.01</option>
+        <option name="charting.chart.stackMode">default</option>
+        <option name="charting.chart.style">shiny</option>
+        <option name="charting.drilldown">none</option>
+        <option name="charting.layout.splitSeries">0</option>
+        <option name="charting.legend.labelStyle.overflowMode">ellipsisMiddle</option>
+        <option name="charting.legend.placement">right</option>
+        <option name="refresh.display">progressbar</option>
+      </chart>
+      <chart depends="$show_cpu2$">
+        <title>Average CPU Queue Length</title>
+        <search base="os">
+          <query>| search host=$host$ 
+| timechart avg(wait_threads_count) as "Queue Length"</query>
+        </search>
+        <option name="charting.axisLabelsX.majorLabelStyle.overflowMode">ellipsisNone</option>
+        <option name="charting.axisLabelsX.majorLabelStyle.rotation">0</option>
+        <option name="charting.axisTitleX.visibility">collapsed</option>
+        <option name="charting.axisTitleY.visibility">visible</option>
+        <option name="charting.axisTitleY2.visibility">visible</option>
+        <option name="charting.axisX.scale">linear</option>
+        <option name="charting.axisY.scale">linear</option>
+        <option name="charting.axisY2.enabled">0</option>
+        <option name="charting.axisY2.scale">inherit</option>
+        <option name="charting.chart">line</option>
+        <option name="charting.chart.bubbleMaximumSize">50</option>
+        <option name="charting.chart.bubbleMinimumSize">10</option>
+        <option name="charting.chart.bubbleSizeBy">area</option>
+        <option name="charting.chart.nullValueMode">connect</option>
+        <option name="charting.chart.sliceCollapsingThreshold">0.01</option>
+        <option name="charting.chart.stackMode">default</option>
+        <option name="charting.chart.style">shiny</option>
+        <option name="charting.drilldown">none</option>
+        <option name="charting.layout.splitSeries">0</option>
+        <option name="charting.legend.labelStyle.overflowMode">ellipsisMiddle</option>
+        <option name="charting.legend.placement">right</option>
+        <option name="refresh.display">progressbar</option>
+      </chart>
+      <table depends="$show_cpu3$">
+        <title>Top 10 CPU Consumers</title>
+        <search>
+          <query>index=* tag=oshost tag=performance tag=process process_cpu_used_percent=* host=$host$ 
+| addinfo 
+| where _time &gt; relative_time(min(info_max_time, now()), "-2m") 
+| eval process_mem_used=round(process_mem_used/1024.0/1024.0, 2) 
+| eval process_cpu_used_percent=round(process_cpu_used_percent, 2) 
+| rename process_name as Process 
+| stats latest(process_cpu_used_percent) as "CPU Used (%)", latest(process_mem_used) as "Memory Used (MB)" by Process 
+| sort limit=10 -"CPU Used (%)"</query>
+          <earliest>$myTime.earliest$</earliest>
+          <latest>$myTime.latest$</latest>
+          <refresh>$refresh_token$</refresh>
+          <refreshType>delay</refreshType>
+        </search>
+        <option name="count">10</option>
+        <option name="dataOverlayMode">none</option>
+        <option name="drilldown">cell</option>
+        <option name="refresh.display">progressbar</option>
+        <option name="refresh.time.visible">0</option>
+        <option name="rowNumbers">false</option>
+        <option name="wrap">true</option>
+      </table>
+    </panel>
+    <panel depends="$drill_memory$">
+      <title>Memory</title>
+      <input type="link" searchWhenChanged="true">
+        <choice value="memory1">Memory Utilization %</choice>
+        <choice value="memory2">Top 10 Memory Consumers</choice>
+        <change>
+          <condition value="memory1">
+            <set token="show_memory1">true</set>
+            <unset token="show_memory2"></unset>
+          </condition>
+          <condition value="memory2">
+            <set token="show_memory2">true</set>
+            <unset token="show_memory1"></unset>
+          </condition>
+          <condition value="hide">
+            <unset token="show_memory1"></unset>
+            <unset token="show_memory2"></unset>
+            <unset token="drill_memory"></unset>
+          </condition>
+        </change>
+      </input>
+      <chart depends="$show_memory1$">
+        <title>Average Memory Utilization %</title>
+        <search base="os">
+          <query>| search host=$host$ 
+| timechart eval(round(avg(mem_used_percent), 2)) as "Memory Used (%)"</query>
+        </search>
+        <option name="charting.axisLabelsX.majorLabelStyle.overflowMode">ellipsisNone</option>
+        <option name="charting.axisLabelsX.majorLabelStyle.rotation">0</option>
+        <option name="charting.axisTitleX.visibility">visible</option>
+        <option name="charting.axisTitleY.visibility">visible</option>
+        <option name="charting.axisTitleY2.visibility">visible</option>
+        <option name="charting.axisX.scale">linear</option>
+        <option name="charting.axisY.maximumNumber">100</option>
+        <option name="charting.axisY.minimumNumber">0</option>
+        <option name="charting.axisY.scale">linear</option>
+        <option name="charting.axisY2.enabled">0</option>
+        <option name="charting.axisY2.scale">inherit</option>
+        <option name="charting.chart">line</option>
+        <option name="charting.chart.bubbleMaximumSize">50</option>
+        <option name="charting.chart.bubbleMinimumSize">10</option>
+        <option name="charting.chart.bubbleSizeBy">area</option>
+        <option name="charting.chart.nullValueMode">connect</option>
+        <option name="charting.chart.sliceCollapsingThreshold">0.01</option>
+        <option name="charting.chart.stackMode">default</option>
+        <option name="charting.chart.style">shiny</option>
+        <option name="charting.drilldown">none</option>
+        <option name="charting.layout.splitSeries">1</option>
+        <option name="charting.legend.labelStyle.overflowMode">ellipsisMiddle</option>
+        <option name="charting.legend.placement">right</option>
+        <option name="refresh.display">progressbar</option>
+      </chart>
+      <table depends="$show_memory2$">
+        <title>Top 10 Memory Consumers</title>
+        <search>
+          <query>index=* tag=oshost tag=performance tag=process process_cpu_used_percent=* | host=$host$ 
+| addinfo 
+| where _time &gt; relative_time(min(info_max_time, now()), "-2m") 
+| eval process_mem_used=round(process_mem_used/1024.0/1024.0, 2) 
+| eval process_cpu_used_percent=round(process_cpu_used_percent, 2) 
+| rename process_name as Process 
+| stats latest(process_cpu_used_percent) as "CPU Used (%)", latest(process_mem_used) as "Memory Used (MB)" by Process 
+| sort limit=10 -"Memory Used (MB)"</query>
+          <earliest>$myTime.earliest$</earliest>
+          <latest>$myTime.latest$</latest>
+          <refresh>$refresh_token$</refresh>
+          <refreshType>delay</refreshType>
+        </search>
+        <option name="count">10</option>
+        <option name="dataOverlayMode">none</option>
+        <option name="drilldown">cell</option>
+        <option name="refresh.display">progressbar</option>
+        <option name="refresh.time.visible">0</option>
+        <option name="rowNumbers">false</option>
+        <option name="wrap">true</option>
+      </table>
+    </panel>
+    <panel depends="$drill_disk$">
+      <title>Disk</title>
+      <input type="link" searchWhenChanged="true">
+        <choice value="disk1">Free Space</choice>
+        <choice value="disk2">Read OPs</choice>
+        <choice value="disk3">Write OPs</choice>
+        <change>
+          <condition value="disk1">
+            <set token="show_disk1">true</set>
+            <unset token="show_disk2"></unset>
+            <unset token="show_disk3"></unset>
+          </condition>
+          <condition value="disk2">
+            <set token="show_disk2">true</set>
+            <unset token="show_disk1"></unset>
+            <unset token="show_disk3"></unset>
+          </condition>
+          <condition value="disk3">
+            <set token="show_disk3">true</set>
+            <unset token="show_disk1"></unset>
+            <unset token="show_disk2"></unset>
+          </condition>
+          <condition value="hide">
+            <unset token="show_disk1"></unset>
+            <unset token="show_disk2"></unset>
+            <unset token="show_disk3"></unset>
+            <unset token="drill_disk"></unset>
+          </condition>
+        </change>
+      </input>
+      <chart depends="$show_disk1$">
+        <title>Disk % Free Space</title>
+        <search base="os">
+          <query>| search host=$host$ 
+| timechart min(min_free) as "Minimum Free Disk Space" by Filesystem</query>
+        </search>
+        <option name="charting.axisLabelsX.majorLabelStyle.overflowMode">ellipsisNone</option>
+        <option name="charting.axisLabelsX.majorLabelStyle.rotation">0</option>
+        <option name="charting.axisTitleX.visibility">visible</option>
+        <option name="charting.axisTitleY.visibility">collapsed</option>
+        <option name="charting.axisTitleY2.visibility">visible</option>
+        <option name="charting.axisX.scale">linear</option>
+        <option name="charting.axisY.maximumNumber">100</option>
+        <option name="charting.axisY.minimumNumber">0</option>
+        <option name="charting.axisY.scale">linear</option>
+        <option name="charting.axisY2.enabled">0</option>
+        <option name="charting.axisY2.scale">inherit</option>
+        <option name="charting.chart">line</option>
+        <option name="charting.chart.bubbleMaximumSize">50</option>
+        <option name="charting.chart.bubbleMinimumSize">10</option>
+        <option name="charting.chart.bubbleSizeBy">area</option>
+        <option name="charting.chart.nullValueMode">connect</option>
+        <option name="charting.chart.sliceCollapsingThreshold">0.01</option>
+        <option name="charting.chart.stackMode">default</option>
+        <option name="charting.chart.style">shiny</option>
+        <option name="charting.drilldown">none</option>
+        <option name="charting.layout.splitSeries">0</option>
+        <option name="charting.legend.labelStyle.overflowMode">ellipsisMiddle</option>
+        <option name="charting.legend.placement">right</option>
+        <option name="refresh.display">progressbar</option>
+      </chart>
+      <chart depends="$show_disk2$">
+        <title>Average Disk Read OPs</title>
+        <search base="os">
+          <query>| search host=$host$ 
+| timechart avg(read_ops) as "Average Read Operations"</query>
+        </search>
+        <option name="charting.axisLabelsX.majorLabelStyle.overflowMode">ellipsisNone</option>
+        <option name="charting.axisLabelsX.majorLabelStyle.rotation">0</option>
+        <option name="charting.axisTitleX.visibility">collapsed</option>
+        <option name="charting.axisTitleY.visibility">visible</option>
+        <option name="charting.axisTitleY2.visibility">visible</option>
+        <option name="charting.axisX.scale">linear</option>
+        <option name="charting.axisY.scale">linear</option>
+        <option name="charting.axisY2.enabled">1</option>
+        <option name="charting.axisY2.scale">inherit</option>
+        <option name="charting.chart">line</option>
+        <option name="charting.chart.bubbleMaximumSize">50</option>
+        <option name="charting.chart.bubbleMinimumSize">10</option>
+        <option name="charting.chart.bubbleSizeBy">area</option>
+        <option name="charting.chart.nullValueMode">connect</option>
+        <option name="charting.chart.overlayFields">avg(read_latency)</option>
+        <option name="charting.chart.sliceCollapsingThreshold">0.01</option>
+        <option name="charting.chart.stackMode">default</option>
+        <option name="charting.chart.style">shiny</option>
+        <option name="charting.drilldown">none</option>
+        <option name="charting.layout.splitSeries">0</option>
+        <option name="charting.legend.labelStyle.overflowMode">ellipsisMiddle</option>
+        <option name="charting.legend.placement">right</option>
+        <option name="charting.seriesColors">[5bc93e,6582a4,f08113,674899]</option>
+        <option name="refresh.display">progressbar</option>
+      </chart>
+      <chart depends="$show_disk3$">
+        <title>Average Disk Write OPs</title>
+        <search base="os">
+          <query>| search host=$host$ 
+| timechart avg(write_ops) as "Average Write Operations"</query>
+        </search>
+        <option name="charting.chart">line</option>
+        <option name="charting.chart.nullValueMode">connect</option>
+        <option name="refresh.display">progressbar</option>
+      </chart>
+    </panel>
+    <panel depends="$drill_network$">
+      <title>Network</title>
+      <input type="link" searchWhenChanged="true">
+        <choice value="network1">Bandwidth (in bytes)</choice>
+        <choice value="network2">Bandwidth (in Packets)</choice>
+        <change>
+          <condition value="network1">
+            <set token="show_network1">true</set>
+            <unset token="show_network2"></unset>
+          </condition>
+          <condition value="network2">
+            <set token="show_network2">true</set>
+            <unset token="show_network1"></unset>
+          </condition>
+          <condition value="hide">
+            <unset token="show_network1"></unset>
+            <unset token="show_network2"></unset>
+            <unset token="drill_network"></unset>
+          </condition>
+        </change>
+      </input>
+      <chart depends="$show_network1$">
+        <title>Network Bandwidth (in bytes)</title>
+        <search base="os">
+          <query>| search host=$host$ 
+| timechart avg(bytes_in) as "Inbound bytes", avg(bytes_out) as "Outbound bytes"</query>
+        </search>
+        <!--  <option name="charting.axisLabelsX.majorLabelVisibility">hide</option> -->
+        <option name="charting.axisTitleX.visibility">collapsed</option>
+        <option name="charting.chart">line</option>
+        <option name="charting.chart.nullValueMode">connect</option>
+        <option name="charting.chart.showDataLabels">none</option>
+        <option name="charting.chart.stackMode">stacked</option>
+        <option name="charting.legend.placement">right</option>
+        <option name="refresh.display">progressbar</option>
+        <option name="refresh.time.visible">0</option>
+      </chart>
+      <chart depends="$show_network2$">&gt;<title>Network Bandwidth (in Packets)</title>
+        <search base="os">
+          <query>| search host=$host$ 
+| timechart avg(packets_in) as "Inbound Packets", avg(packets_out) as "Outbound Packets"</query>
+        </search>
+        <!--   <option name="charting.axisLabelsX.majorLabelVisibility">hide</option> -->
+        <option name="charting.axisTitleX.visibility">collapsed</option>
+        <option name="charting.chart">line</option>
+        <option name="charting.chart.nullValueMode">connect</option>
+        <option name="charting.chart.showDataLabels">none</option>
+        <option name="charting.chart.stackMode">stacked</option>
+        <option name="charting.legend.placement">right</option>
+        <option name="refresh.display">progressbar</option>
+        <option name="refresh.time.visible">0</option>
+      </chart>
+    </panel>
+    <panel depends="$drill_lb$">
+      <title>Load Balancer</title>
+      <input type="link" searchWhenChanged="true">
+        <choice value="lb1">Server 5XX Errors</choice>
+        <choice value="lb2">Round Trip Time</choice>
+        <choice value="lb3">Connections</choice>
+        <choice value="lb4">Throughput</choice>
+        <default>lb1</default>
+        <change>
+          <condition value="lb1">
+            <set token="show_lb1">true</set>
+            <unset token="show_lb2"></unset>
+            <unset token="show_lb3"></unset>
+            <unset token="show_lb4"></unset>
+          </condition>
+          <condition value="lb2">
+            <set token="show_lb2">true</set>
+            <unset token="show_lb1"></unset>
+            <unset token="show_lb3"></unset>
+            <unset token="show_lb4"></unset>
+          </condition>
+          <condition value="lb3">
+            <set token="show_lb3">true</set>
+            <unset token="show_lb1"></unset>
+            <unset token="show_lb2"></unset>
+            <unset token="show_lb4"></unset>
+          </condition>
+          <condition value="lb4">
+            <set token="show_lb4">true</set>
+            <unset token="show_lb1"></unset>
+            <unset token="show_lb2"></unset>
+            <unset token="show_lb3"></unset>
+          </condition>
+          <condition value="hide">
+            <unset token="show_lb1"></unset>
+            <unset token="show_lb2"></unset>
+            <unset token="show_lb3"></unset>
+            <unset token="show_lb4"></unset>
+            <unset token="drill_lb"></unset>
+          </condition>
+        </change>
+      </input>
+      <chart depends="$show_lb1$">
+        <title>Server 5XX</title>
+        <search base="loadbalancer">
+          <query>| search host=$host$ 
+| timechart avg(5XX_codes) as "5XX Responses"</query>
+        </search>
+        <option name="charting.axisLabelsX.majorLabelStyle.overflowMode">ellipsisNone</option>
+        <option name="charting.axisLabelsX.majorLabelStyle.rotation">0</option>
+        <option name="charting.axisTitleX.visibility">visible</option>
+        <option name="charting.axisTitleY.visibility">visible</option>
+        <option name="charting.axisTitleY2.visibility">visible</option>
+        <option name="charting.axisX.scale">linear</option>
+        <option name="charting.axisY.scale">linear</option>
+        <option name="charting.axisY2.enabled">0</option>
+        <option name="charting.axisY2.scale">inherit</option>
+        <option name="charting.chart">line</option>
+        <option name="charting.chart.bubbleMaximumSize">50</option>
+        <option name="charting.chart.bubbleMinimumSize">10</option>
+        <option name="charting.chart.bubbleSizeBy">area</option>
+        <option name="charting.chart.nullValueMode">connect</option>
+        <option name="charting.chart.sliceCollapsingThreshold">0.01</option>
+        <option name="charting.chart.stackMode">default</option>
+        <option name="charting.chart.style">shiny</option>
+        <option name="charting.drilldown">none</option>
+        <option name="charting.layout.splitSeries">0</option>
+        <option name="charting.legend.labelStyle.overflowMode">ellipsisMiddle</option>
+        <option name="charting.legend.placement">right</option>
+        <option name="refresh.display">progressbar</option>
+      </chart>
+      <chart depends="$show_lb2$">
+        <title>Round Trip Time (ms)</title>
+        <search base="loadbalancer">
+          <query>| search host=$host$ 
+| timechart avg(rtt) as "Round Trip Time (ms)"</query>
+        </search>
+        <option name="charting.axisLabelsX.majorLabelStyle.overflowMode">ellipsisNone</option>
+        <option name="charting.axisLabelsX.majorLabelStyle.rotation">0</option>
+        <option name="charting.axisTitleX.visibility">collapsed</option>
+        <option name="charting.axisTitleY.visibility">visible</option>
+        <option name="charting.axisTitleY2.visibility">visible</option>
+        <option name="charting.axisX.scale">linear</option>
+        <option name="charting.axisY.scale">linear</option>
+        <option name="charting.axisY2.enabled">0</option>
+        <option name="charting.axisY2.scale">inherit</option>
+        <option name="charting.chart">line</option>
+        <option name="charting.chart.bubbleMaximumSize">50</option>
+        <option name="charting.chart.bubbleMinimumSize">10</option>
+        <option name="charting.chart.bubbleSizeBy">area</option>
+        <option name="charting.chart.nullValueMode">connect</option>
+        <option name="charting.chart.sliceCollapsingThreshold">0.01</option>
+        <option name="charting.chart.stackMode">default</option>
+        <option name="charting.chart.style">shiny</option>
+        <option name="charting.drilldown">none</option>
+        <option name="charting.layout.splitSeries">0</option>
+        <option name="charting.legend.labelStyle.overflowMode">ellipsisMiddle</option>
+        <option name="charting.legend.placement">right</option>
+        <option name="refresh.display">progressbar</option>
+      </chart>
+      <chart depends="$show_lb3$">
+        <title>Connections</title>
+        <search base="loadbalancer">
+          <query>| search host=$host$ 
+| timechart avg(client_connections) as "Client Connections", avg(server_connections) as "Server Connections"</query>
+        </search>
+        <option name="charting.chart">line</option>
+        <option name="charting.chart.nullValueMode">connect</option>
+        <option name="refresh.display">progressbar</option>
+        <option name="refresh.time.visible">0</option>
+      </chart>
+      <chart depends="$show_lb4$">
+        <title>Throughput</title>
+        <search base="loadbalancer">
+          <query>| search host=$host$ 
+| timechart avg(client_throughput) as client_throughput, avg(server_throughput) as server_throughput
+
+| eval client_throughput = client_throughput/(1024*1024*1024), server_throughput = server_throughput/(1024*1024*1024)  
+
+| rename client_throughput as "Client Throughput (GB/s)", server_throughput as "Server Throughput (GB/s)"</query>
+        </search>
+        <option name="charting.chart">line</option>
+        <option name="charting.chart.nullValueMode">connect</option>
+        <option name="refresh.display">progressbar</option>
+        <option name="refresh.time.visible">0</option>
+      </chart>
+    </panel>
+    <panel depends="$drill_web$">
+      <title>Web Server</title>
+      <input type="link" searchWhenChanged="true">
+        <choice value="web1">Average Response Time (ms)</choice>
+        <choice value="web2">Status Codes</choice>
+        <choice value="web3">Top URLs</choice>
+        <choice value="web4">Error Rate</choice>
+        <default>web1</default>
+        <change>
+          <condition value="web1">
+            <set token="show_web1">true</set>
+            <unset token="show_web2"></unset>
+            <unset token="show_web3"></unset>
+            <unset token="show_web4"></unset>
+          </condition>
+          <condition value="web2">
+            <set token="show_web2">true</set>
+            <unset token="show_web1"></unset>
+            <unset token="show_web3"></unset>
+            <unset token="show_web4"></unset>
+          </condition>
+          <condition value="web3">
+            <set token="show_web3">true</set>
+            <unset token="show_web1"></unset>
+            <unset token="show_web2"></unset>
+            <unset token="show_web4"></unset>
+          </condition>
+          <condition value="web4">
+            <set token="show_web4">true</set>
+            <unset token="show_web1"></unset>
+            <unset token="show_web2"></unset>
+            <unset token="show_web3"></unset>
+          </condition>
+          <condition value="hide">
+            <unset token="show_web1"></unset>
+            <unset token="show_web2"></unset>
+            <unset token="show_web3"></unset>
+            <unset token="show_web4"></unset>
+            <unset token="drill_web"></unset>
+          </condition>
+        </change>
+      </input>
+      <chart depends="$show_web1$">
+        <title>Average Response Time (ms)</title>
+        <search base="webserver">
+          <query>| search host=$host$ 
+| timechart avg("Avg. Response Time (ms)") as "Avg. Response Time (ms)"</query>
+        </search>
+        <option name="charting.axisLabelsX.majorLabelStyle.overflowMode">ellipsisNone</option>
+        <option name="charting.axisLabelsX.majorLabelStyle.rotation">0</option>
+        <option name="charting.axisTitleX.visibility">collapsed</option>
+        <option name="charting.axisTitleY.visibility">visible</option>
+        <option name="charting.axisTitleY2.visibility">visible</option>
+        <option name="charting.axisX.scale">linear</option>
+        <option name="charting.axisY.scale">linear</option>
+        <option name="charting.axisY2.enabled">1</option>
+        <option name="charting.axisY2.scale">inherit</option>
+        <option name="charting.chart">line</option>
+        <option name="charting.chart.bubbleMaximumSize">50</option>
+        <option name="charting.chart.bubbleMinimumSize">10</option>
+        <option name="charting.chart.bubbleSizeBy">area</option>
+        <option name="charting.chart.nullValueMode">connect</option>
+        <option name="charting.chart.overlayFields">max(read_latency)</option>
+        <option name="charting.chart.sliceCollapsingThreshold">0.01</option>
+        <option name="charting.chart.stackMode">default</option>
+        <option name="charting.chart.style">shiny</option>
+        <option name="charting.drilldown">none</option>
+        <option name="charting.layout.splitSeries">0</option>
+        <option name="charting.legend.labelStyle.overflowMode">ellipsisMiddle</option>
+        <option name="charting.legend.placement">right</option>
+        <option name="refresh.display">progressbar</option>
+        <option name="refresh.time.visible">0</option>
+      </chart>
+      <chart depends="$show_web2$">
+        <title>HTTP Status Codes</title>
+        <search base="webserver">
+          <query>| search host=$host$ 
+| timechart  sum(2xx) as 2xx, sum(3xx) as 3xx, sum(4xx) as 4xx, sum(5xx) as 5xx</query>
+        </search>
+        <option name="charting.axisY.scale">linear</option>
+        <option name="charting.chart">area</option>
+        <option name="charting.chart.nullValueMode">zero</option>
+        <option name="charting.chart.stackMode">default</option>
+        <option name="charting.layout.splitSeries">0</option>
+        <option name="refresh.display">progressbar</option>
+      </chart>
+      <table depends="$show_web3$">
+        <title>Top 10 URLs</title>
+        <search base="webserver">
+          <query>| search host=$host$ 
+|  stats count as Total,  sum(errors) as Errors by uri_path | sort -Total | head 10</query>
+        </search>
+        <option name="count">10</option>
+        <option name="dataOverlayMode">none</option>
+        <option name="drilldown">cell</option>
+        <option name="refresh.display">progressbar</option>
+        <option name="rowNumbers">false</option>
+        <option name="wrap">true</option>
+        <format type="color" field="Errors">
+          <colorPalette type="list">[#FFFFFF,#D93F3C]</colorPalette>
+          <scale type="threshold">1</scale>
+        </format>
+        <format field="sparkline" type="sparkline">
+          <option name="lineColor">#5379af</option>
+          <option name="fillColor">#CCDDFF</option>
+          <option name="lineWidth">1</option>
+          <option name="spotRadius">3</option>
+          <option name="height">25px</option>
+        </format>
+      </table>
+      <chart depends="$show_web4$">
+        <title>Error Rate</title>
+        <search base="webserver">
+          <query>| search host=$host$ 
+| timechart avg("error_rate") as "Error Rate (%)"</query>
+        </search>
+        <option name="charting.axisLabelsX.majorLabelStyle.overflowMode">ellipsisNone</option>
+        <option name="charting.axisLabelsX.majorLabelStyle.rotation">0</option>
+        <option name="charting.axisTitleX.visibility">collapsed</option>
+        <option name="charting.axisTitleY.visibility">visible</option>
+        <option name="charting.axisTitleY2.visibility">visible</option>
+        <option name="charting.axisX.scale">linear</option>
+        <option name="charting.axisY.maximumNumber">100</option>
+        <option name="charting.axisY.minimumNumber">0</option>
+        <option name="charting.axisY.scale">linear</option>
+        <option name="charting.axisY2.enabled">1</option>
+        <option name="charting.axisY2.scale">inherit</option>
+        <option name="charting.chart">line</option>
+        <option name="charting.chart.bubbleMaximumSize">50</option>
+        <option name="charting.chart.bubbleMinimumSize">10</option>
+        <option name="charting.chart.bubbleSizeBy">area</option>
+        <option name="charting.chart.nullValueMode">zero</option>
+        <option name="charting.chart.overlayFields">max(read_latency)</option>
+        <option name="charting.chart.sliceCollapsingThreshold">0.01</option>
+        <option name="charting.chart.stackMode">default</option>
+        <option name="charting.chart.style">shiny</option>
+        <option name="charting.drilldown">none</option>
+        <option name="charting.layout.splitSeries">0</option>
+        <option name="charting.legend.labelStyle.overflowMode">ellipsisMiddle</option>
+        <option name="charting.legend.placement">right</option>
+        <option name="refresh.display">progressbar</option>
+        <option name="refresh.time.visible">0</option>
+      </chart>
+    </panel>
+    <panel depends="$drill_app$">
+      <title>App Server</title>
+      <input type="link" searchWhenChanged="true">
+        <choice value="app1">Average Response Time (ms)</choice>
+        <choice value="app2">Status Codes</choice>
+        <choice value="app3">Top URLs</choice>
+        <choice value="app4">Error Rate</choice>
+        <choice value="app5">JVM Heap</choice>
+        <choice value="app6">Garbage Collection</choice>
+        <choice value="app7">Threads</choice>
+        <change>
+          <condition value="app1">
+            <set token="show_app1">true</set>
+            <unset token="show_app2"></unset>
+            <unset token="show_app3"></unset>
+            <unset token="show_app4"></unset>
+            <unset token="show_app5"></unset>
+            <unset token="show_app6"></unset>
+            <unset token="show_app7"></unset>
+          </condition>
+          <condition value="app2">
+            <set token="show_app2">true</set>
+            <unset token="show_app1"></unset>
+            <unset token="show_app3"></unset>
+            <unset token="show_app4"></unset>
+            <unset token="show_app5"></unset>
+            <unset token="show_app6"></unset>
+            <unset token="show_app7"></unset>
+          </condition>
+          <condition value="app3">
+            <set token="show_app3">true</set>
+            <unset token="show_app1"></unset>
+            <unset token="show_app2"></unset>
+            <unset token="show_app4"></unset>
+            <unset token="show_app5"></unset>
+            <unset token="show_app6"></unset>
+            <unset token="show_app7"></unset>
+          </condition>
+          <condition value="app4">
+            <set token="show_app4">true</set>
+            <unset token="show_app1"></unset>
+            <unset token="show_app2"></unset>
+            <unset token="show_app3"></unset>
+            <unset token="show_app5"></unset>
+            <unset token="show_app6"></unset>
+            <unset token="show_app7"></unset>
+          </condition>
+          <condition value="app5">
+            <set token="show_app5">true</set>
+            <unset token="show_app1"></unset>
+            <unset token="show_app2"></unset>
+            <unset token="show_app3"></unset>
+            <unset token="show_app4"></unset>
+            <unset token="show_app6"></unset>
+            <unset token="show_app7"></unset>
+          </condition>
+          <condition value="app6">
+            <set token="show_app6">true</set>
+            <unset token="show_app1"></unset>
+            <unset token="show_app2"></unset>
+            <unset token="show_app3"></unset>
+            <unset token="show_app4"></unset>
+            <unset token="show_app5"></unset>
+            <unset token="show_app7"></unset>
+          </condition>
+          <condition value="app7">
+            <set token="show_app7"></set>
+            <unset token="show_app1"></unset>
+            <unset token="show_app2"></unset>
+            <unset token="show_app3"></unset>
+            <unset token="show_app4"></unset>
+            <unset token="show_app5"></unset>
+            <unset token="show_app6"></unset>
+          </condition>
+          <condition value="hide">
+            <unset token="show_app1"></unset>
+            <unset token="show_app2"></unset>
+            <unset token="show_app3"></unset>
+            <unset token="show_app4"></unset>
+            <unset token="show_app5"></unset>
+            <unset token="show_app6"></unset>
+            <unset token="show_app7"></unset>
+            <unset token="drill_app"></unset>
+          </condition>
+        </change>
+      </input>
+      <chart depends="$show_app1$">
+        <title>Average Transaction Time (ms)</title>
+        <search base="appserver">
+          <query>| search host=$host$ 
+| timechart avg("Average Response Time (ms)") as "Avg. Response Time (ms)"</query>
+          <refresh>$refresh_token$</refresh>
+          <refreshType>delay</refreshType>
+        </search>
+        <option name="charting.axisLabelsX.majorLabelStyle.overflowMode">ellipsisNone</option>
+        <option name="charting.axisLabelsX.majorLabelStyle.rotation">0</option>
+        <option name="charting.axisTitleX.visibility">collapsed</option>
+        <option name="charting.axisTitleY.visibility">visible</option>
+        <option name="charting.axisTitleY2.visibility">visible</option>
+        <option name="charting.axisX.scale">linear</option>
+        <option name="charting.axisY.scale">linear</option>
+        <option name="charting.axisY2.enabled">1</option>
+        <option name="charting.axisY2.scale">inherit</option>
+        <option name="charting.chart">line</option>
+        <option name="charting.chart.bubbleMaximumSize">50</option>
+        <option name="charting.chart.bubbleMinimumSize">10</option>
+        <option name="charting.chart.bubbleSizeBy">area</option>
+        <option name="charting.chart.nullValueMode">connect</option>
+        <option name="charting.chart.overlayFields">max(read_latency)</option>
+        <option name="charting.chart.sliceCollapsingThreshold">0.01</option>
+        <option name="charting.chart.stackMode">default</option>
+        <option name="charting.chart.style">shiny</option>
+        <option name="charting.drilldown">none</option>
+        <option name="charting.layout.splitSeries">0</option>
+        <option name="charting.legend.labelStyle.overflowMode">ellipsisMiddle</option>
+        <option name="charting.legend.placement">right</option>
+        <option name="refresh.display">progressbar</option>
+        <option name="refresh.time.visible">0</option>
+      </chart>
+      <chart depends="$show_app2$">
+        <title>HTTP Status Codes</title>
+        <search base="appserver">
+          <query>| search host=$host$ uri_path=*
+| timechart sum(2xx) as 2xx, sum(3xx) as 3xx, sum(4xx) as 4xx, sum(5xx) as 5xx</query>
+          <refresh>$refresh_token$</refresh>
+          <refreshType>delay</refreshType>
+        </search>
+        <option name="charting.chart">area</option>
+        <option name="charting.chart.nullValueMode">zero</option>
+        <option name="charting.chart.stackMode">stacked</option>
+        <option name="charting.layout.splitSeries">0</option>
+        <option name="refresh.display">progressbar</option>
+      </chart>
+      <table depends="$show_app3$">
+        <title>Top 10 URLs</title>
+        <search base="appserver">
+          <query>| search host=$host$ uri_path=*
+|  stats count as Total,  sum(errors) as Errors by uri_path | sort -Total | head 10</query>
+          <refresh>$refresh_token$</refresh>
+          <refreshType>delay</refreshType>
+        </search>
+        <option name="count">10</option>
+        <option name="dataOverlayMode">none</option>
+        <option name="drilldown">cell</option>
+        <option name="refresh.display">progressbar</option>
+        <option name="rowNumbers">false</option>
+        <option name="wrap">true</option>
+        <format type="color" field="Errors">
+          <colorPalette type="list">[#FFFFFF,#D93F3C]</colorPalette>
+          <scale type="threshold">1</scale>
+        </format>
+        <format field="sparkline" type="sparkline">
+          <option name="lineColor">#5379af</option>
+          <option name="fillColor">#CCDDFF</option>
+          <option name="lineWidth">1</option>
+          <option name="spotRadius">3</option>
+          <option name="height">25px</option>
+        </format>
+      </table>
+      <chart depends="$show_app4$">
+        <title>Error Rate</title>
+        <search base="appserver">
+          <query>| search host=*  uri_path=*
+| eval error_rate = errors/requests*100
+| timechart avg(error_rate) as "Error Rate (%)"</query>
+          <refresh>$refresh_token$</refresh>
+          <refreshType>delay</refreshType>
+        </search>
+        <option name="charting.axisLabelsX.majorLabelStyle.overflowMode">ellipsisNone</option>
+        <option name="charting.axisLabelsX.majorLabelStyle.rotation">0</option>
+        <option name="charting.axisTitleX.visibility">collapsed</option>
+        <option name="charting.axisTitleY.visibility">visible</option>
+        <option name="charting.axisTitleY2.visibility">visible</option>
+        <option name="charting.axisX.scale">linear</option>
+        <option name="charting.axisY.maximumNumber">100</option>
+        <option name="charting.axisY.minimumNumber">0</option>
+        <option name="charting.axisY.scale">linear</option>
+        <option name="charting.axisY2.enabled">1</option>
+        <option name="charting.axisY2.scale">inherit</option>
+        <option name="charting.chart">line</option>
+        <option name="charting.chart.bubbleMaximumSize">50</option>
+        <option name="charting.chart.bubbleMinimumSize">10</option>
+        <option name="charting.chart.bubbleSizeBy">area</option>
+        <option name="charting.chart.nullValueMode">zero</option>
+        <option name="charting.chart.overlayFields">max(read_latency)</option>
+        <option name="charting.chart.sliceCollapsingThreshold">0.01</option>
+        <option name="charting.chart.stackMode">default</option>
+        <option name="charting.chart.style">shiny</option>
+        <option name="charting.drilldown">none</option>
+        <option name="charting.layout.splitSeries">0</option>
+        <option name="charting.legend.labelStyle.overflowMode">ellipsisMiddle</option>
+        <option name="charting.legend.placement">right</option>
+        <option name="refresh.display">progressbar</option>
+        <option name="refresh.time.visible">0</option>
+      </chart>
+      <chart depends="$show_app5$">
+        <title>JVM Heap Usage</title>
+        <search base="appserver">
+          <query>| search host=$host$ 
+| timechart avg("Heap Memory Free (%)") as "Heap Memory Free (%)"</query>
+        </search>
+        <option name="charting.axisLabelsX.majorLabelStyle.overflowMode">ellipsisNone</option>
+        <option name="charting.axisLabelsX.majorLabelStyle.rotation">0</option>
+        <option name="charting.axisTitleX.visibility">collapsed</option>
+        <option name="charting.axisTitleY.visibility">visible</option>
+        <option name="charting.axisTitleY2.visibility">visible</option>
+        <option name="charting.axisX.scale">linear</option>
+        <option name="charting.axisY.maximumNumber">100</option>
+        <option name="charting.axisY.minimumNumber">0</option>
+        <option name="charting.axisY.scale">linear</option>
+        <option name="charting.axisY2.enabled">0</option>
+        <option name="charting.axisY2.scale">inherit</option>
+        <option name="charting.chart">line</option>
+        <option name="charting.chart.bubbleMaximumSize">50</option>
+        <option name="charting.chart.bubbleMinimumSize">10</option>
+        <option name="charting.chart.bubbleSizeBy">area</option>
+        <option name="charting.chart.nullValueMode">connect</option>
+        <option name="charting.chart.sliceCollapsingThreshold">0.01</option>
+        <option name="charting.chart.stackMode">default</option>
+        <option name="charting.chart.style">shiny</option>
+        <option name="charting.drilldown">none</option>
+        <option name="charting.layout.splitSeries">0</option>
+        <option name="charting.legend.labelStyle.overflowMode">ellipsisMiddle</option>
+        <option name="charting.legend.placement">right</option>
+        <option name="refresh.display">progressbar</option>
+      </chart>
+      <chart depends="$show_app6$">
+        <title>GC Time (ms)</title>
+        <search base="appserver">
+          <query>| search host=$host$ 
+| timechart avg("Garbage Collection Time (ms)") as "Garbage Collection Time (ms)"</query>
+        </search>
+        <option name="charting.axisLabelsX.majorLabelStyle.overflowMode">ellipsisNone</option>
+        <option name="charting.axisLabelsX.majorLabelStyle.rotation">0</option>
+        <option name="charting.axisTitleX.visibility">collapsed</option>
+        <option name="charting.axisTitleY.visibility">visible</option>
+        <option name="charting.axisTitleY2.visibility">visible</option>
+        <option name="charting.axisX.scale">linear</option>
+        <option name="charting.axisY.scale">linear</option>
+        <option name="charting.axisY2.enabled">1</option>
+        <option name="charting.axisY2.scale">inherit</option>
+        <option name="charting.chart">line</option>
+        <option name="charting.chart.bubbleMaximumSize">50</option>
+        <option name="charting.chart.bubbleMinimumSize">10</option>
+        <option name="charting.chart.bubbleSizeBy">area</option>
+        <option name="charting.chart.nullValueMode">connect</option>
+        <option name="charting.chart.overlayFields">max(read_latency)</option>
+        <option name="charting.chart.sliceCollapsingThreshold">0.01</option>
+        <option name="charting.chart.stackMode">default</option>
+        <option name="charting.chart.style">shiny</option>
+        <option name="charting.drilldown">none</option>
+        <option name="charting.layout.splitSeries">0</option>
+        <option name="charting.legend.labelStyle.overflowMode">ellipsisMiddle</option>
+        <option name="charting.legend.placement">right</option>
+        <option name="refresh.display">progressbar</option>
+        <option name="refresh.time.visible">0</option>
+      </chart>
+      <chart depends="$show_app7$">
+        <title>Average Available Threads %</title>
+        <search base="appserver">
+          <query>| search host=$host$ 
+| timechart avg("Available Threads (%)") as "Available Threads (%)"</query>
+        </search>
+        <option name="charting.axisLabelsX.majorLabelStyle.overflowMode">ellipsisNone</option>
+        <option name="charting.axisLabelsX.majorLabelStyle.rotation">0</option>
+        <option name="charting.axisTitleX.visibility">collapsed</option>
+        <option name="charting.axisTitleY.visibility">visible</option>
+        <option name="charting.axisTitleY2.visibility">visible</option>
+        <option name="charting.axisX.scale">linear</option>
+        <option name="charting.axisY.maximumNumber">100</option>
+        <option name="charting.axisY.minimumNumber">0</option>
+        <option name="charting.axisY.scale">linear</option>
+        <option name="charting.axisY2.enabled">0</option>
+        <option name="charting.axisY2.scale">inherit</option>
+        <option name="charting.chart">line</option>
+        <option name="charting.chart.bubbleMaximumSize">50</option>
+        <option name="charting.chart.bubbleMinimumSize">10</option>
+        <option name="charting.chart.bubbleSizeBy">area</option>
+        <option name="charting.chart.nullValueMode">connect</option>
+        <option name="charting.chart.sliceCollapsingThreshold">0.01</option>
+        <option name="charting.chart.stackMode">default</option>
+        <option name="charting.chart.style">shiny</option>
+        <option name="charting.drilldown">none</option>
+        <option name="charting.layout.splitSeries">0</option>
+        <option name="charting.legend.labelStyle.overflowMode">ellipsisMiddle</option>
+        <option name="charting.legend.placement">right</option>
+        <option name="refresh.display">progressbar</option>
+      </chart>
+    </panel>
+  </row>
+  <row>
+    <panel>
+      <title>Recent OS Host Events</title>
+      <event>
+        <search>
+          <query>index=* host=* tag=oshost host="$host$" | table _time sourcetype  _raw | head 50</query>
+          <earliest>$myTime.earliest$</earliest>
+          <latest>$myTime.latest$</latest>
+          <refresh>$refresh_token$</refresh>
+          <refreshType>delay</refreshType>
+        </search>
+        <option name="refresh.display">progressbar</option>
+      </event>
+    </panel>
+    <panel>
+      <title>Recent Application Events</title>
+      <table>
+        <search>
+          <query>index=* (tag=web OR tag=appserver OR tag=loadbalancer) host="$host$" | table _time host sourcetype  _raw | head 30</query>
+          <earliest>$myTime.earliest$</earliest>
+          <latest>$myTime.latest$</latest>
+          <refresh>$refresh_token$</refresh>
+          <refreshType>delay</refreshType>
+        </search>
+        <option name="count">10</option>
+        <option name="refresh.display">progressbar</option>
+      </table>
+    </panel>
+  </row>
+</form>

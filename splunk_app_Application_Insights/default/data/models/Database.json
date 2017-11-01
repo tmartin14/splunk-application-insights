@@ -1,0 +1,585 @@
+{
+    "modelName": "Database",
+    "displayName": "Database",
+    "description": "Database Data Model",
+    "editable": false,
+    "objects": [
+        {
+            "objectName": "Inventory",
+            "displayName": "Inventory",
+            "parentName": "BaseEvent",
+            "fields": [
+                {
+                    "fieldName": "description",
+                    "displayName": "description",
+                    "type": "string",
+                    "fieldSearch": "",
+                    "required": false,
+                    "multivalue": false,
+                    "hidden": false
+                },
+                {
+                    "fieldName": "tag",
+                    "displayName": "tag",
+                    "type": "string",
+                    "fieldSearch": "",
+                    "required": false,
+                    "multivalue": true,
+                    "hidden": false
+                },
+                {
+                    "fieldName": "database_instance",
+                    "displayName": "database_instance",
+                    "type": "string",
+                    "fieldSearch": "",
+                    "required": false,
+                    "multivalue": false,
+                    "hidden": false
+                },
+                {
+                    "fieldName": "vendor",
+                    "displayName": "vendor",
+                    "type": "string",
+                    "fieldSearch": "",
+                    "required": false,
+                    "multivalue": false,
+                    "hidden": false
+                },
+                {
+                    "fieldName": "vendor_product",
+                    "displayName": "vendor_product",
+                    "type": "string",
+                    "fieldSearch": "",
+                    "required": false,
+                    "multivalue": false,
+                    "hidden": false
+                },
+                {
+                    "fieldName": "version",
+                    "displayName": "version",
+                    "type": "string",
+                    "fieldSearch": "",
+                    "required": false,
+                    "multivalue": false,
+                    "hidden": false
+                },
+                {
+                    "fieldName": "storage_engine",
+                    "displayName": "storage_engine",
+                    "type": "string",
+                    "fieldSearch": "",
+                    "required": false,
+                    "multivalue": false,
+                    "hidden": false
+                },
+                {
+                    "fieldName": "availability",
+                    "displayName": "availability",
+                    "type": "string",
+                    "fieldSearch": "",
+                    "required": false,
+                    "multivalue": false,
+                    "hidden": false
+                },
+                {
+                    "fieldName": "character_set",
+                    "displayName": "character_set",
+                    "type": "string",
+                    "fieldSearch": "",
+                    "required": false,
+                    "multivalue": false,
+                    "hidden": false
+                },
+                {
+                    "fieldName": "collation",
+                    "displayName": "collation",
+                    "type": "string",
+                    "fieldSearch": "",
+                    "required": false,
+                    "multivalue": false,
+                    "hidden": false
+                },
+                {
+                    "fieldName": "port",
+                    "displayName": "port",
+                    "type": "string",
+                    "fieldSearch": "",
+                    "required": false,
+                    "multivalue": false,
+                    "hidden": false
+                }
+            ],
+            "calculations": [
+                {
+                    "calculationID": "Inventory_instance_role",
+                    "calculationType": "Eval",
+                    "outputFields": [
+                        {
+                            "fieldName": "instance_role",
+                            "displayName": "instance_role",
+                            "type": "string",
+                            "fieldSearch": "",
+                            "required": false,
+                            "multivalue": false,
+                            "hidden": false
+                        }
+                    ],
+                    "expression": "\"database_instance\""
+                }
+            ],
+            "constraints": [
+                {
+                    "search": "tag=database tag=inventory"
+                }
+            ],
+            "lineage": "Inventory"
+        },
+        {
+            "objectName": "Performance",
+            "displayName": "Performance",
+            "parentName": "BaseEvent",
+            "fields": [
+                {
+                    "fieldName": "tag",
+                    "displayName": "tag",
+                    "type": "string",
+                    "fieldSearch": "",
+                    "required": false,
+                    "multivalue": true,
+                    "hidden": false
+                },
+                {
+                    "fieldName": "database_instance",
+                    "displayName": "database_instance",
+                    "type": "string",
+                    "fieldSearch": "",
+                    "required": false,
+                    "multivalue": false,
+                    "hidden": false
+                },
+                {
+                    "fieldName": "database_name",
+                    "displayName": "database_name",
+                    "type": "string",
+                    "fieldSearch": "",
+                    "required": false,
+                    "multivalue": false,
+                    "hidden": false
+                },
+                {
+                    "fieldName": "availability",
+                    "displayName": "availability",
+                    "type": "string",
+                    "fieldSearch": "",
+                    "required": false,
+                    "multivalue": false,
+                    "hidden": false
+                },
+                {
+                    "fieldName": "replication_status",
+                    "displayName": "replication_status",
+                    "type": "string",
+                    "fieldSearch": "",
+                    "required": false,
+                    "multivalue": false,
+                    "hidden": false
+                },
+                {
+                    "fieldName": "instance_read_iops",
+                    "displayName": "instance_read_iops",
+                    "type": "number",
+                    "fieldSearch": "",
+                    "required": false,
+                    "multivalue": false,
+                    "hidden": false
+                },
+                {
+                    "fieldName": "instance_write_iops",
+                    "displayName": "instance_write_iops",
+                    "type": "number",
+                    "fieldSearch": "",
+                    "required": false,
+                    "multivalue": false,
+                    "hidden": false
+                },
+                {
+                    "fieldName": "read_lock_rate",
+                    "displayName": "read_lock_rate",
+                    "type": "number",
+                    "fieldSearch": "",
+                    "required": false,
+                    "multivalue": false,
+                    "hidden": false
+                },
+                {
+                    "fieldName": "write_lock_rate",
+                    "displayName": "write_lock_rate",
+                    "type": "number",
+                    "fieldSearch": "",
+                    "required": false,
+                    "multivalue": false,
+                    "hidden": false
+                },
+                {
+                    "fieldName": "transaction_rate",
+                    "displayName": "transaction_rate",
+                    "type": "number",
+                    "fieldSearch": "",
+                    "required": false,
+                    "multivalue": false,
+                    "hidden": false
+                },
+                {
+                    "fieldName": "active_transactions",
+                    "displayName": "active_transactions",
+                    "type": "number",
+                    "fieldSearch": "",
+                    "required": false,
+                    "multivalue": false,
+                    "hidden": false
+                },
+                {
+                    "fieldName": "connections",
+                    "displayName": "connections",
+                    "type": "number",
+                    "fieldSearch": "",
+                    "required": false,
+                    "multivalue": false,
+                    "hidden": false
+                },
+                {
+                    "fieldName": "current_size",
+                    "displayName": "current_size",
+                    "type": "number",
+                    "fieldSearch": "",
+                    "required": false,
+                    "multivalue": false,
+                    "hidden": false
+                },
+                {
+                    "fieldName": "total_operations_count",
+                    "displayName": "total_operations_count",
+                    "type": "number",
+                    "fieldSearch": "",
+                    "required": false,
+                    "multivalue": false,
+                    "hidden": false
+                },
+                {
+                    "fieldName": "connection_pool_used_percent",
+                    "displayName": "connection_pool_used_percent",
+                    "type": "number",
+                    "fieldSearch": "",
+                    "required": false,
+                    "multivalue": false,
+                    "hidden": false
+                },
+                {
+                    "fieldName": "connection_pool_wait_time",
+                    "displayName": "connection_pool_wait_time",
+                    "type": "number",
+                    "fieldSearch": "",
+                    "required": false,
+                    "multivalue": false,
+                    "hidden": false
+                },
+                {
+                    "fieldName": "deadlock_rate",
+                    "displayName": "deadlock_rate",
+                    "type": "number",
+                    "fieldSearch": "",
+                    "required": false,
+                    "multivalue": false,
+                    "hidden": false
+                },
+                {
+                    "fieldName": "replication_latency",
+                    "displayName": "replication_latency",
+                    "type": "number",
+                    "fieldSearch": "",
+                    "required": false,
+                    "multivalue": false,
+                    "hidden": false
+                },
+                {
+                    "fieldName": "lock_average_wait_time",
+                    "displayName": "lock_average_wait_time",
+                    "type": "number",
+                    "fieldSearch": "",
+                    "required": false,
+                    "multivalue": false,
+                    "hidden": false
+                },
+                {
+                    "fieldName": "error_rate",
+                    "displayName": "error_rate",
+                    "type": "number",
+                    "fieldSearch": "",
+                    "required": false,
+                    "multivalue": false,
+                    "hidden": false
+                },
+                {
+                    "fieldName": "disk_flush_rate",
+                    "displayName": "disk_flush_rate",
+                    "type": "number",
+                    "fieldSearch": "",
+                    "required": false,
+                    "multivalue": false,
+                    "hidden": false
+                }
+            ],
+            "calculations": [],
+            "constraints": [
+                {
+                    "search": "tag=database tag=performance"
+                }
+            ],
+            "lineage": "Performance"
+        },
+        {
+            "objectName": "Table",
+            "displayName": "Table",
+            "parentName": "Performance",
+            "fields": [
+                {
+                    "fieldName": "table_name",
+                    "displayName": "table_name",
+                    "type": "string",
+                    "fieldSearch": "",
+                    "required": false,
+                    "multivalue": false,
+                    "hidden": false
+                },
+                {
+                    "fieldName": "row_count",
+                    "displayName": "row_count",
+                    "type": "number",
+                    "fieldSearch": "",
+                    "required": false,
+                    "multivalue": false,
+                    "hidden": false
+                },
+                {
+                    "fieldName": "size",
+                    "displayName": "size",
+                    "type": "number",
+                    "fieldSearch": "",
+                    "required": false,
+                    "multivalue": false,
+                    "hidden": false
+                },
+                {
+                    "fieldName": "last_update_time",
+                    "displayName": "last_update_time",
+                    "type": "string",
+                    "fieldSearch": "",
+                    "required": false,
+                    "multivalue": false,
+                    "hidden": false
+                }
+            ],
+            "calculations": [],
+            "constraints": [
+                {
+                    "search": "tag=table"
+                }
+            ],
+            "lineage": "Performance.Table"
+        },
+        {
+            "objectName": "User",
+            "displayName": "User",
+            "parentName": "Performance",
+            "fields": [
+                {
+                    "fieldName": "user_id",
+                    "displayName": "user_id",
+                    "type": "string",
+                    "fieldSearch": "",
+                    "required": false,
+                    "multivalue": false,
+                    "hidden": false
+                },
+                {
+                    "fieldName": "user_name",
+                    "displayName": "user_name",
+                    "type": "string",
+                    "fieldSearch": "",
+                    "required": false,
+                    "multivalue": false,
+                    "hidden": false
+                },
+                {
+                    "fieldName": "transaction_count",
+                    "displayName": "transaction_count",
+                    "type": "number",
+                    "fieldSearch": "",
+                    "required": false,
+                    "multivalue": false,
+                    "hidden": false
+                }
+            ],
+            "calculations": [],
+            "constraints": [
+                {
+                    "search": "tag=user"
+                }
+            ],
+            "lineage": "Performance.User"
+        },
+        {
+            "objectName": "Session",
+            "displayName": "Session",
+            "parentName": "Performance",
+            "fields": [
+                {
+                    "fieldName": "session_id",
+                    "displayName": "session_id",
+                    "type": "string",
+                    "fieldSearch": "",
+                    "required": false,
+                    "multivalue": false,
+                    "hidden": false
+                },
+                {
+                    "fieldName": "session_status",
+                    "displayName": "session_status",
+                    "type": "string",
+                    "fieldSearch": "",
+                    "required": false,
+                    "multivalue": false,
+                    "hidden": false
+                },
+                {
+                    "fieldName": "buffer_cache_hit_ratio",
+                    "displayName": "buffer_cache_hit_ratio",
+                    "type": "number",
+                    "fieldSearch": "",
+                    "required": false,
+                    "multivalue": false,
+                    "hidden": false
+                },
+                {
+                    "fieldName": "buffer_cache_usage_percent",
+                    "displayName": "buffer_cache_usage_percent",
+                    "type": "number",
+                    "fieldSearch": "",
+                    "required": false,
+                    "multivalue": false,
+                    "hidden": false
+                }
+            ],
+            "calculations": [],
+            "constraints": [
+                {
+                    "search": "tag=session"
+                }
+            ],
+            "lineage": "Performance.Session"
+        },
+        {
+            "objectName": "Query",
+            "displayName": "Query",
+            "parentName": "Performance",
+            "fields": [
+                {
+                    "fieldName": "query",
+                    "displayName": "query",
+                    "type": "string",
+                    "fieldSearch": "",
+                    "required": false,
+                    "multivalue": false,
+                    "hidden": false
+                },
+                {
+                    "fieldName": "query_id",
+                    "displayName": "query_id",
+                    "type": "string",
+                    "fieldSearch": "",
+                    "required": false,
+                    "multivalue": false,
+                    "hidden": false
+                },
+                {
+                    "fieldName": "query_type",
+                    "displayName": "query_type",
+                    "type": "string",
+                    "fieldSearch": "",
+                    "required": false,
+                    "multivalue": false,
+                    "hidden": false
+                },
+                {
+                    "fieldName": "user",
+                    "displayName": "user",
+                    "type": "string",
+                    "fieldSearch": "",
+                    "required": false,
+                    "multivalue": false,
+                    "hidden": false
+                },
+                {
+                    "fieldName": "response_time",
+                    "displayName": "response_time",
+                    "type": "number",
+                    "fieldSearch": "",
+                    "required": false,
+                    "multivalue": false,
+                    "hidden": false
+                },
+                {
+                    "fieldName": "records_affected",
+                    "displayName": "records_affected",
+                    "type": "number",
+                    "fieldSearch": "",
+                    "required": false,
+                    "multivalue": false,
+                    "hidden": false
+                },
+                {
+                    "fieldName": "indexes_hit",
+                    "displayName": "indexes_hit",
+                    "type": "string",
+                    "fieldSearch": "",
+                    "required": false,
+                    "multivalue": true,
+                    "hidden": false
+                },
+                {
+                    "fieldName": "stored_procedures_called",
+                    "displayName": "stored_procedures_called",
+                    "type": "string",
+                    "fieldSearch": "",
+                    "required": false,
+                    "multivalue": true,
+                    "hidden": false
+                },
+                {
+                    "fieldName": "tables_hit",
+                    "displayName": "tables_hit",
+                    "type": "string",
+                    "fieldSearch": "",
+                    "required": false,
+                    "multivalue": true,
+                    "hidden": false
+                }
+            ],
+            "calculations": [],
+            "constraints": [
+                {
+                    "search": "tag=query"
+                }
+            ],
+            "lineage": "Performance.Query"
+        }
+    ],
+    "objectNameList": [
+        "Inventory",
+        "Performance",
+        "Table",
+        "User",
+        "Session",
+        "Query"
+    ]
+}

@@ -1,0 +1,136 @@
+<form>
+  <label>Triage</label>
+  <description>When something goes wrong, how do you find the root cause? Find a lot of similar events and look at what preceeded them.</description>
+  <!--   style="z-index:-1" -->
+  <!-- -->
+  <fieldset submitButton="false" autoRun="false">
+    <input type="time" token="myTime" searchWhenChanged="true">
+      <label>Time</label>
+      <default>
+        <earliest>-60m@m</earliest>
+        <latest>now</latest>
+      </default>
+    </input>
+    <input type="multiselect" token="hosts" searchWhenChanged="true">
+      <label>Host(s)</label>
+      <choice value="*">All</choice>
+      <default>*</default>
+      <initialValue>*</initialValue>
+      <delimiter> OR host=</delimiter>
+      <fieldForLabel>host</fieldForLabel>
+      <fieldForValue>host</fieldForValue>
+      <search>
+        <query>* | stats dc(host) by host</query>
+        <earliest>$myTime.earliest$</earliest>
+        <latest>$myTime.latest$</latest>
+      </search>
+    </input>
+    <input type="multiselect" token="sourcetypes" searchWhenChanged="true">
+      <label>Sourcetype(s)</label>
+      <choice value="*">All</choice>
+      <default>*</default>
+      <initialValue>*</initialValue>
+      <delimiter>OR sourcetype=</delimiter>
+      <fieldForLabel>sourcetype</fieldForLabel>
+      <fieldForValue>sourcetype</fieldForValue>
+      <search>
+        <query>| metadata type=sourcetypes NOT _internal</query>
+        <earliest>$myTime.earliest$</earliest>
+        <latest>$myTime.latest$</latest>
+      </search>
+    </input>
+    <input type="multiselect" token="indexes">
+      <label>Index(es)</label>
+      <choice value="*">All</choice>
+      <delimiter>OR index=</delimiter>
+      <fieldForLabel>title</fieldForLabel>
+      <fieldForValue>title</fieldForValue>
+      <search>
+        <query>| eventcount summarize=false index=* 
+| dedup index 
+| fields index 
+| rename index as title 
+
+| search NOT title=splunklogger NOT title=history NOT title=summary 
+
+| table title</query>
+        <earliest>$myTime.earliest$</earliest>
+        <latest>$myTime.latest$</latest>
+      </search>
+      <default>*</default>
+      <initialValue>*</initialValue>
+    </input>
+    <input type="text" token="terms" searchWhenChanged="true">
+      <label>Terms: (Hint: consider "NOT")</label>
+      <default>*</default>
+      <initialValue>*</initialValue>
+    </input>
+  </fieldset>
+  <row>
+    <panel>
+      <!-- Instruction Button    -->
+      <!-- Search Results Window    -->
+      <html>
+        <h3 style="display:block;clear:both;">
+          <i class="icn-easy icon-modal-medium icon-color-easy m-right"/>Triage using Patterns and Time Sequence
+        </h3>
+        <description style="display:block;clear:both;padding:5px 10px 5px 20px;">When someting goes wrong, how do you find the root cause?  Most will assemble all the experts to compare notes and timestamps using their favorite tools (a.k.a. 'The War Room').  This dashboard helps to automate that process and here's how to use it:<br/>
+          <br/>
+        <ol>
+          <li>Look for high occurrences of events with similar patterns in the table below</li>
+          <li>Look at the events that PRECEDED those groupings</li>
+          <li>Refine if needed to remove noise or isolate individual hosts or sources.  Consider adding more search terms or excluding them using the NOT option</li>
+        </ol>
+          <br/>
+        You'll be on your way to root cause identification in no time.  The more data you add to Splunk, the more correlations you will see.  
+        </description>
+      </html>
+      <html id="btn_element7">
+        <div class="btn-group1">
+          <div style="margin:5px;">
+            <a class="btn full" href="javascript:();" data-toggle="modal" data-target="#info">More on how this works...<i class="icon-question-circle icon-modal-medium icon-color-easy m-left"/>
+            </a>
+          </div>
+        </div>
+      </html>
+      <table>
+        <search>
+          <query>host=$hosts$ index=$indexes$ sourcetype=$sourcetypes$ (crit* OR fail* OR fatal OR except* OR err* OR status &gt; 499) NOT success* OR NOT INFO OR NOT WARN $terms$ 
+                  | cluster showcount=t 
+                  | rename _raw as "Event Audit Trail" cluster_count as "#" sourcetype as Sourcetype host as Host 
+                  | table # _time Host Sourcetype "Event Audit Trail" 
+                  | sort -_time</query>
+          <earliest>$myTime.earliest$</earliest>
+          <latest>$myTime.latest$</latest>
+        </search>
+        <option name="count">30</option>
+        <option name="dataOverlayMode">heatmap</option>
+        <option name="drilldown">cell</option>
+        <option name="percentagesRow">false</option>
+        <option name="rowNumbers">true</option>
+        <option name="totalsRow">false</option>
+        <option name="wrap">true</option>
+      </table>
+    </panel>
+  </row>
+  <row id="howto">
+    <panel>
+      <html> <div id="info" class="modal fade" style="display: none;"> <div class="modal-dialog"> <div class="modal-content"> <div class="modal-header"> <h4 class="modal-title"> <i class="icn-easy draggable icon-modal-medium icon-color-easy m-right"/>Triage: How it works</h4> <button type="button" class="close" data-dismiss="modal" aria-hidden="false"> </button> </div> <div class="modal-body p-10"> 
+      This dashboard illustrates how easily and quickly you can find <strong>root cause </strong>of application issues, operations issues, security, and enterprise faults. By having the appropriate data in Splunk, whether defined or undefined, structured or unstructured, you can use the power of _time, a simple search, and a function to show correlations across yoru many data sources related by time. This is the holy grail of finding collateral damage (symptoms of the problem) as well as the true root cause in an overwhelming sea of data. The key is to have the data sources present. If you don't have the data you don't have the whole picture. JUST GET THE DATA IN. 
+      <br/>
+      <br/>
+        <strong>Instructions</strong>
+        <br/>
+        Choose the time period you are investigating. Choose the host(s) and indexes that contain the data that you think is involved. Then choose the corresponding sourcetypes. Once the data comes back you can eliminate false noise by NEGATING events that are not a part of the issue. Simply use the word "NOT" in front of a unique term pulled from the irrelevant event. Make sure that the term you use would NOT be located in event that has valuable incident data.
+        <br/>
+        <br/>
+        <strong>The Search</strong>
+        <br/>
+        <pre>
+<code>host=(choices) index=(choices) sourcetype=(choices) (crit* OR fail* OR fatal OR except* OR err* OR status &gt; 499) NOT success* OR NOT INFO OR NOT WARN (choices-text input) | cluster showcount=t | rename _raw as "Event Audit Trail" cluster_count as "#" sourcetype as Sourcetype host as Host | table _time Host Sourcetype "Event Audit Trail" # | sort -_time </code>
+        </pre>
+      <br/>
+       <br/>  </div> </div> </div> </div> </html>
+    </panel>
+  </row>
+</form>

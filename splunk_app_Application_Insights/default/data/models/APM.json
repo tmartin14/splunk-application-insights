@@ -1,0 +1,410 @@
+{
+  "modelName": "APM",
+  "displayName": "Application Performance Management",
+  "description": "Application Performance Management (APM) Data Model. Extracts inventory, performance, and availability metrics from supported APM technologies such as web applications, synthetic monitoring technologies, and high-level programming languages",
+  "objectSummary": {
+    "Event-Based": 5,
+    "Transaction-Based": 0,
+    "Search-Based": 0
+  },
+  "objects": [
+    {
+      "comment": {"tags": ["apm", "inventory"]},
+      "objectName": "Inventory",
+      "displayName": "Inventory",
+      "parentName": "BaseEvent",
+      "fields": [
+        {
+          "fieldName": "tag",
+          "owner": "Inventory",
+          "type": "string",
+          "fieldSearch": "",
+          "required": false,
+          "multivalue": false,
+          "hidden": false,
+          "editable": true,
+          "displayName": "tag",
+          "comment": {"description": "The Splunk platform uses this automatically generated field to access tags from within data models. You do not need to populate it."}
+        }
+      ],
+      "calculations": [
+        {
+          "outputFields": [
+            {
+              "fieldName": "role",
+              "owner": "Inventory",
+              "type": "string",
+              "fieldSearch": "",
+              "required": false,
+              "multivalue": false,
+              "hidden": false,
+              "editable": true,
+              "displayName": "role",
+              "comment": {"description": "A calculated field that defines the role played by the entity.", "expected_values" : ["apm"]}
+            }
+          ],
+          "calculationID": "Inventory_role",
+          "owner": "Inventory",
+          "editable": true,
+          "comment": "",
+          "calculationType": "Eval",
+          "expression": "\"apm\""
+        }
+      ],
+      "constraints": [
+        {
+          "search": "tag=apm tag=inventory",
+          "owner": "Inventory"
+        }
+      ],
+      "lineage": "Inventory"
+    },
+    {
+      "comment": {"tags": ["apm", "inventory", "application"]},
+      "objectName": "Application_Information",
+      "displayName": "Application",
+      "parentName": "Inventory",
+      "fields": [
+        {
+          "fieldName": "account",
+          "owner": "Inventory.Application_Information",
+          "type": "string",
+          "fieldSearch": "",
+          "required": false,
+          "multivalue": false,
+          "hidden": false,
+          "editable": true,
+          "displayName": "account",
+          "comment": {"description": "Account ID or account name of the customer account registered with the APM vendor."}
+        },
+        {
+          "fieldName": "app_title",
+          "owner": "Inventory.Application_Information",
+          "type": "string",
+          "fieldSearch": "",
+          "required": false,
+          "multivalue": false,
+          "hidden": false,
+          "editable": true,
+          "displayName": "app_title",
+          "comment": {"description": "Unique identifier for the application being monitored by the APM tool."}
+        },
+        {
+          "fieldName": "application_id",
+          "owner": "Inventory.Application_Information",
+          "type": "string",
+          "fieldSearch": "",
+          "required": false,
+          "multivalue": false,
+          "hidden": false,
+          "editable": true,
+          "displayName": "application_id",
+          "comment": {"description": "The unique ID of the application from the APM vendor."}
+        },
+        {
+          "fieldName": "app_language",
+          "owner": "Inventory.Application_Information",
+          "type": "string",
+          "fieldSearch": "",
+          "required": false,
+          "multivalue": false,
+          "hidden": false,
+          "editable": true,
+          "displayName": "app_language",
+          "comment": {"description": "The language/framework that the application being monitored is written in."}
+        },
+        {
+          "fieldName": "app_name",
+          "owner": "Inventory.Application_Information",
+          "type": "string",
+          "fieldSearch": "",
+          "required": false,
+          "multivalue": false,
+          "hidden": false,
+          "editable": true,
+          "displayName": "app_name",
+          "comment": {"description": "Name of the application being monitored by the APM tool."}
+        },
+        {
+          "fieldName": "availability",
+          "owner": "Inventory.Application_Information",
+          "type": "number",
+          "fieldSearch": "",
+          "required": false,
+          "multivalue": false,
+          "hidden": false,
+          "editable": true,
+          "displayName": "availability",
+          "comment": {"description": "The latest reporting state of the application. Possible values are 1 (available) or 0 (unavailable).", "expected_values": ["0", "1"]}
+        },
+        {
+          "fieldName": "health",
+          "owner": "Inventory.Application_Information",
+          "type": "number",
+          "fieldSearch": "",
+          "required": false,
+          "multivalue": false,
+          "hidden": false,
+          "editable": true,
+          "displayName": "health",
+          "comment": {"description": "The latest health state of the application. Possible values are 1 (normal), 2 (warning), 3 (critical) or 0 (unknown).", "expected_values": ["0", "1", "2", "3"]}
+        },
+        {
+          "fieldName": "vendor",
+          "owner": "Inventory.Application_Information",
+          "type": "string",
+          "fieldSearch": "",
+          "required": false,
+          "multivalue": false,
+          "hidden": false,
+          "editable": true,
+          "displayName": "vendor",
+          "comment": {"description": "Vendor of the APM product."}
+        }
+      ],
+      "calculations": [
+        
+      ],
+      "constraints": [
+        {
+          "search": "tag=application",
+          "owner": "Inventory.Application_Information"
+        }
+      ],
+      "lineage": "Inventory.Application_Information"
+    },
+    {
+      "comment": {"tags": ["apm", "performance"]},
+      "objectName": "Performance",
+      "displayName": "Performance",
+      "parentName": "BaseEvent",
+      "fields": [
+        {
+          "fieldName": "app_title",
+          "owner": "Performance",
+          "type": "string",
+          "fieldSearch": "",
+          "required": false,
+          "multivalue": false,
+          "hidden": false,
+          "editable": true,
+          "displayName": "app_title",
+          "comment": {"description": "Unique identifier for the application being monitored by the APM tool."}
+        },
+        {
+          "fieldName": "app_name",
+          "owner": "Performance",
+          "type": "string",
+          "fieldSearch": "",
+          "required": false,
+          "multivalue": false,
+          "hidden": false,
+          "editable": true,
+          "displayName": "app_name",
+          "comment": {"description": "Name of the application being monitored by the APM tool."}
+        },
+        {
+          "fieldName": "tag",
+          "owner": "Performance",
+          "type": "string",
+          "fieldSearch": "",
+          "required": false,
+          "multivalue": false,
+          "hidden": false,
+          "editable": true,
+          "displayName": "tag",
+          "comment": {"description": "The Splunk platform uses this automatically generated field to access tags from within data models. You do not need to populate it."}
+        }
+      ],
+      "calculations": [
+        
+      ],
+      "constraints": [
+        {
+          "search": "tag=apm tag=performance",
+          "owner": "Performance"
+        }
+      ],
+      "lineage": "Performance"
+    },
+    {
+      "comment": {"tags": ["apm", "performance", "application"]},
+      "objectName": "Application",
+      "displayName": "Application",
+      "parentName": "Performance",
+      "fields": [
+        {
+          "fieldName": "apdex_score",
+          "owner": "Performance.Application",
+          "type": "number",
+          "fieldSearch": "",
+          "required": false,
+          "multivalue": false,
+          "hidden": false,
+          "editable": true,
+          "displayName": "apdex_score",
+          "comment": {"description": "Apdex (Application Performance Index) score for the application. The apdex score defines a standard method for reporting and comparing the performance of software applications with values between 0.0 and 1.0."}
+        },
+        {
+          "fieldName": "error_rate",
+          "owner": "Performance.Application",
+          "type": "number",
+          "fieldSearch": "",
+          "required": false,
+          "multivalue": false,
+          "hidden": false,
+          "editable": true,
+          "displayName": "error_rate",
+          "comment": {"description": "The percentage of requests with errors over total requests for the application."}
+        },
+        {
+          "fieldName": "response_time",
+          "owner": "Performance.Application",
+          "type": "number",
+          "fieldSearch": "",
+          "required": false,
+          "multivalue": false,
+          "hidden": false,
+          "editable": true,
+          "displayName": "response_time",
+          "comment": {"description": "The time that application took to respond to a request, in milliseconds."}
+        },
+        {
+          "fieldName": "thruput",
+          "owner": "Performance.Application",
+          "type": "number",
+          "fieldSearch": "",
+          "required": false,
+          "multivalue": false,
+          "hidden": false,
+          "editable": true,
+          "displayName": "thruput",
+          "comment": {"description": "The count of requests received per minute to the application."}
+        },
+        {
+          "fieldName": "availability",
+          "owner": "Performance.Application",
+          "type": "number",
+          "fieldSearch": "",
+          "required": false,
+          "multivalue": false,
+          "hidden": false,
+          "editable": true,
+          "displayName": "availability",
+          "comment": {"description": "The latest reporting state of application. Possible values are 1 (available) or 0 (unavailable).", "expected_values": [0, 1]}
+        },
+        {
+          "fieldName": "health",
+          "owner": "Performance.Application",
+          "type": "number",
+          "fieldSearch": "",
+          "required": false,
+          "multivalue": false,
+          "hidden": false,
+          "editable": true,
+          "displayName": "health",
+          "comment": {"description": "The latest health state of application. Possible values are 1 (normal), 2 (warning), 3 (critical) or 0 (unknown).", "expected_values": [0, 1, 2, 3]}
+        }
+      ],
+      "calculations": [
+        
+      ],
+      "constraints": [
+        {
+          "search": "tag=application",
+          "owner": "Performance.Application"
+        }
+      ],
+      "lineage": "Performance.Application"
+    },
+    {
+      "comment": {"tags": ["apm", "performance", "euem"]},
+      "objectName": "EUEM",
+      "displayName": "EUEM",
+      "parentName": "Performance",
+      "fields": [ ],
+      "calculations": [
+        {
+          "outputFields": [
+            {
+              "fieldName": "response_time",
+              "owner": "Performance.EUEM",
+              "type": "number",
+              "fieldSearch": "",
+              "required": false,
+              "multivalue": false,
+              "hidden": false,
+              "editable": true,
+              "displayName": "response_time",
+              "comment": {"description": "The time that the application took to respond to a request as measured from the end user's browser or mobile device, in milliseconds."}
+            }
+          ],
+          "calculationID": "EUEM_Response_Time",
+          "owner": "Performance.EUEM",
+          "editable": true,
+          "comment": "response_time field is an eval of eum_response_time field",
+          "calculationType": "Eval",
+          "expression": "eum_response_time"
+        },
+        {
+          "outputFields": [
+            {
+              "fieldName": "apdex_score",
+              "owner": "Performance.EUEM",
+              "type": "number",
+              "fieldSearch": "",
+              "required": false,
+              "multivalue": false,
+              "hidden": false,
+              "editable": true,
+              "displayName": "apdex_score",
+              "comment": {"description": "Apdex (Application Performance Index) score for the end user monitoring of the application. The apdex score defines a standard method for reporting and comparing the performance of software applications with values between 0.0 and 1.0."}
+            }
+          ],
+          "calculationID": "EUEM_Apdex_core",
+          "owner": "Performance.EUEM",
+          "editable": true,
+          "comment": "apdex_score field is an eval of eum_apdex_score field",
+          "calculationType": "Eval",
+          "expression": "eum_apdex_score"
+        },
+        {
+          "outputFields": [
+            {
+              "fieldName": "thruput",
+              "owner": "Performance.EUEM",
+              "type": "number",
+              "fieldSearch": "",
+              "required": false,
+              "multivalue": false,
+              "hidden": false,
+              "editable": true,
+              "displayName": "thruput",
+              "comment": {"description": "The count of requests per minute for the end user monitoring of the application."}
+            }
+          ],
+          "calculationID": "EUEM_thruput",
+          "owner": "Performance.EUEM",
+          "editable": true,
+          "comment": "thruput field is an eval of eum_thruput field",
+          "calculationType": "Eval",
+          "expression": "eum_thruput"
+        }
+      ],
+      "constraints": [
+        {
+          "search": "tag=euem",
+          "owner": "Performance.EUEM"
+        }
+      ],
+      "lineage": "Performance.EUEM"
+    }
+  ],
+  "objectNameList": [
+    "Inventory",
+    "Application_Information",
+    "Performance",
+    "Application",
+    "EUEM"
+  ]
+}

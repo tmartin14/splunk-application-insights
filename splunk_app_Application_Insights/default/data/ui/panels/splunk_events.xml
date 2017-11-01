@@ -1,0 +1,9 @@
+<panel>
+  <event>
+    <search>
+      <query>| savedsearch DA-ITSI-LB-Loadbalancer_Events host=$host$</query>
+      <earliest>$earliest$</earliest>
+      <latest>$latest$</latest>
+    </search>
+  </event>
+</panel>

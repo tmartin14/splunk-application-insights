@@ -1,0 +1,10 @@
+<panel>
+  <table>
+    <title>Pool Members</title>
+      <search>
+        <query>| savedsearch DA-ITSI-LB-Server_Server_Pools_Members host=$host$</query>
+        <earliest>$earliest$</earliest>
+        <latest>$latest$</latest>
+      </search>
+  </table>
+</panel>

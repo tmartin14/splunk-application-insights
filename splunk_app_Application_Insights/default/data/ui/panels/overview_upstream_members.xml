@@ -1,0 +1,16 @@
+<panel>
+  <table>
+    <title>Upstream/Server Pool Members</title>
+    <search>
+      <query>| savedsearch DA-ITSI-LB-Upstream_Members host=$host$</query>
+      <earliest>$earliest$</earliest>
+      <latest>$latest$</latest>
+    </search>
+    <option name="wrap">true</option>
+    <option name="rowNumbers">false</option>
+    <option name="drilldown">cell</option>
+    <option name="dataOverlayMode">none</option>
+    <option name="count">10</option>
+    <option name="refresh.time.visible">false</option>
+  </table>
+</panel>

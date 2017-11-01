@@ -1,0 +1,288 @@
+<form>
+  <label>Application Servers</label>
+  <description>Insight into the performance of your application servers</description>
+  <!--      BASE SEARCHES     -->
+  <search id="appserver" ref="base_search_app_server">
+    <earliest>$myTime.earliest$</earliest>
+    <latest>$myTime.latest$</latest>
+    <refresh>$refresh_token$</refresh>
+    <refreshType>delay</refreshType>
+  </search>
+  <fieldset submitButton="false">
+    <input type="time" token="myTime" searchWhenChanged="true">
+      <label>Time Period</label>
+      <default>
+        <earliest>-15m</earliest>
+        <latest>now</latest>
+      </default>
+    </input>
+    <input type="dropdown" token="host" searchWhenChanged="true">
+      <label>Host</label>
+      <fieldForLabel>host</fieldForLabel>
+      <fieldForValue>host</fieldForValue>
+      <search base="appserver">
+        <query>| dedup host</query>
+        <earliest>$myTime.earliest$</earliest>
+        <latest>$myTime.latest$</latest>
+      </search>
+      <choice value="*">All</choice>
+      <default>*</default>
+      <initialValue>*</initialValue>
+    </input>
+  </fieldset>
+  <row>
+    <panel>
+      <chart>
+        <title>Active Sessions</title>
+        <search base="appserver">
+          <query>
+| search host="$host$" 
+| timechart avg("Active Sessions") as "Active Sessions"
+| predict "Active Sessions" future_timespan=30</query>
+        </search>
+        <option name="charting.axisTitleX.visibility">collapsed</option>
+        <option name="charting.axisTitleY.visibility">collapsed</option>
+        <option name="charting.chart">area</option>
+        <option name="charting.chart.nullValueMode">connect</option>
+        <option name="charting.chart.showDataLabels">none</option>
+        <option name="charting.legend.placement">top</option>
+        <option name="refresh.time.visible">0</option>
+      </chart>
+    </panel>
+    <panel>
+      <chart>
+        <title>Requests per Minute</title>
+        <search base="appserver">
+          <query>
+| search host="$host$" 
+| timechart avg("Requests Per Minute") as "Requests Per Minute"
+| predict "Requests Per Minute" future_timespan=30</query>
+        </search>
+        <option name="charting.axisTitleX.visibility">collapsed</option>
+        <option name="charting.axisTitleY.visibility">collapsed</option>
+        <option name="charting.chart">area</option>
+        <option name="charting.chart.nullValueMode">connect</option>
+        <option name="charting.chart.showDataLabels">none</option>
+        <option name="charting.legend.placement">top</option>
+        <option name="refresh.display">progressbar</option>
+        <option name="refresh.time.visible">0</option>
+      </chart>
+    </panel>
+    <panel>
+      <chart>
+        <title>Average Transaction Response Time (ms)</title>
+        <search base="appserver">
+          <query>
+| search host="$host$" 
+| timechart avg("Average Response Time (ms)") as "Average Response Time (ms)"
+| predict "Average Response Time (ms)" future_timespan=30</query>
+        </search>
+        <option name="charting.axisTitleX.visibility">collapsed</option>
+        <option name="charting.axisTitleY.visibility">collapsed</option>
+        <option name="charting.chart">area</option>
+        <option name="charting.chart.nullValueMode">connect</option>
+        <option name="charting.chart.showDataLabels">none</option>
+        <option name="charting.legend.placement">top</option>
+        <option name="refresh.display">progressbar</option>
+        <option name="refresh.time.visible">0</option>
+      </chart>
+    </panel>
+    <panel>
+      <chart>
+        <title>Response Codes (2xx, 3xx, 4xx, 5xx)</title>
+        <search base="appserver">
+          <query>
+| search host="$host$" 
+|  timechart sum(2xx) as 2xx, sum(3xx) as 3xx, sum(4xx) as 4xx, sum(5xx) as 5xx</query>
+        </search>
+        <option name="charting.axisLabelsX.majorLabelStyle.overflowMode">ellipsisNone</option>
+        <option name="charting.axisLabelsX.majorLabelStyle.rotation">0</option>
+        <option name="charting.axisTitleX.visibility">visible</option>
+        <option name="charting.axisTitleY.visibility">visible</option>
+        <option name="charting.axisTitleY2.visibility">visible</option>
+        <option name="charting.axisX.scale">linear</option>
+        <option name="charting.axisY.scale">linear</option>
+        <option name="charting.axisY2.enabled">0</option>
+        <option name="charting.axisY2.scale">inherit</option>
+        <option name="charting.chart">column</option>
+        <option name="charting.chart.bubbleMaximumSize">50</option>
+        <option name="charting.chart.bubbleMinimumSize">10</option>
+        <option name="charting.chart.bubbleSizeBy">area</option>
+        <option name="charting.chart.nullValueMode">gaps</option>
+        <option name="charting.chart.showDataLabels">none</option>
+        <option name="charting.chart.sliceCollapsingThreshold">0.01</option>
+        <option name="charting.chart.stackMode">stacked</option>
+        <option name="charting.chart.style">shiny</option>
+        <option name="charting.drilldown">all</option>
+        <option name="charting.layout.splitSeries">0</option>
+        <option name="charting.layout.splitSeries.allowIndependentYRanges">0</option>
+        <option name="charting.legend.labelStyle.overflowMode">ellipsisMiddle</option>
+        <option name="charting.legend.placement">top</option>
+      </chart>
+    </panel>
+  </row>
+  <row>
+    <panel>
+      <chart>
+        <title>Memory Heap Free (%)</title>
+        <search base="appserver">
+          <query>
+| search host="$host$" 
+| timechart avg("Heap Memory Free (%)") as "Heap Memory Free (%)"
+| predict"Heap Memory Free (%)" future_timespan=30</query>
+        </search>
+        <option name="charting.axisTitleX.visibility">collapsed</option>
+        <option name="charting.axisTitleY.visibility">collapsed</option>
+        <option name="charting.chart">area</option>
+        <option name="charting.chart.nullValueMode">connect</option>
+        <option name="charting.chart.showDataLabels">none</option>
+        <option name="charting.legend.placement">top</option>
+        <option name="refresh.display">progressbar</option>
+        <option name="refresh.time.visible">0</option>
+      </chart>
+    </panel>
+    <panel>
+      <chart>
+        <title>Memory Heap Usage</title>
+        <search base="appserver">
+          <query>
+| search host="$host$" 
+| timechart avg("Memory Heap Size (MB)") as "Heap Size (MB)", avg("Memory Heap Used (MB)") as "Heap Used (MB)"
+| predict "Heap Size (MB)", "Heap Used (MB)"  future_timespan=30</query>
+        </search>
+        <option name="charting.axisTitleX.visibility">collapsed</option>
+        <option name="charting.axisTitleY.visibility">collapsed</option>
+        <option name="charting.chart">area</option>
+        <option name="charting.chart.nullValueMode">connect</option>
+        <option name="charting.chart.showDataLabels">none</option>
+        <option name="charting.legend.placement">top</option>
+        <option name="refresh.display">progressbar</option>
+        <option name="refresh.time.visible">0</option>
+      </chart>
+    </panel>
+    <panel>
+      <chart>
+        <title>Garbage Collections (count)</title>
+        <search base="appserver">
+          <query>
+| search host="$host$" 
+| timechart avg("Garbage Collections (count)") as "Garbage Collections (count)"
+| predict "Garbage Collections (count)" future_timespan=30</query>
+        </search>
+        <option name="charting.axisTitleX.visibility">collapsed</option>
+        <option name="charting.axisTitleY.visibility">collapsed</option>
+        <option name="charting.chart">area</option>
+        <option name="charting.chart.nullValueMode">connect</option>
+        <option name="charting.chart.showDataLabels">none</option>
+        <option name="charting.legend.placement">top</option>
+        <option name="refresh.display">progressbar</option>
+        <option name="refresh.time.visible">0</option>
+      </chart>
+    </panel>
+    <panel>
+      <chart>
+        <title>Garbage Collection Time (ms)</title>
+        <search base="appserver">
+          <query>
+| search host="$host$" 
+| timechart avg("Garbage Collection Time (ms)") as "Garbage Collection Time (ms)"
+| predict "Garbage Collection Time (ms)" future_timespan=30</query>
+        </search>
+        <option name="charting.axisTitleX.visibility">collapsed</option>
+        <option name="charting.axisTitleY.visibility">collapsed</option>
+        <option name="charting.chart">area</option>
+        <option name="charting.chart.nullValueMode">connect</option>
+        <option name="charting.chart.showDataLabels">none</option>
+        <option name="charting.legend.placement">top</option>
+        <option name="refresh.display">progressbar</option>
+        <option name="refresh.time.visible">0</option>
+      </chart>
+    </panel>
+  </row>
+  <row>
+    <panel>
+      <chart>
+        <title>Available Threads Count (%)</title>
+        <search base="appserver">
+          <query>
+| search host="$host$" 
+| timechart avg("Available Threads (%)") as "Available Threads (%)"
+| predict"Available Threads (%)" future_timespan=30</query>
+        </search>
+        <option name="charting.axisTitleX.visibility">collapsed</option>
+        <option name="charting.axisTitleY.visibility">collapsed</option>
+        <option name="charting.axisY.maximumNumber">100</option>
+        <option name="charting.chart">area</option>
+        <option name="charting.chart.nullValueMode">connect</option>
+        <option name="charting.chart.showDataLabels">none</option>
+        <option name="charting.legend.placement">top</option>
+        <option name="refresh.display">progressbar</option>
+        <option name="refresh.time.visible">0</option>
+      </chart>
+    </panel>
+    <panel>
+      <chart>
+        <title>Active Threads</title>
+        <search base="appserver">
+          <query>
+| search host="$host$" 
+| timechart avg("Average Active Threads (count)") as "Average Active Threads (count)"
+| predict "Average Active Threads (count)" future_timespan=30</query>
+        </search>
+        <option name="charting.axisTitleX.visibility">collapsed</option>
+        <option name="charting.axisTitleY.visibility">collapsed</option>
+        <option name="charting.chart">area</option>
+        <option name="charting.chart.nullValueMode">connect</option>
+        <option name="charting.chart.showDataLabels">none</option>
+        <option name="charting.legend.placement">top</option>
+        <option name="refresh.time.visible">0</option>
+      </chart>
+    </panel>
+    <panel>
+      <chart>
+        <title>Hung Threads (count)</title>
+        <search base="appserver">
+          <query>
+| search host="$host$" 
+| timechart avg("Average Hung Threads (count)") as "Average Hung Threads (count)"
+| predict "Average Hung Threads (count)" future_timespan=30</query>
+        </search>
+        <option name="charting.axisTitleX.visibility">collapsed</option>
+        <option name="charting.axisTitleY.visibility">collapsed</option>
+        <option name="charting.chart">area</option>
+        <option name="charting.chart.nullValueMode">connect</option>
+        <option name="charting.chart.showDataLabels">none</option>
+        <option name="charting.legend.placement">top</option>
+        <option name="refresh.display">progressbar</option>
+        <option name="refresh.time.visible">0</option>
+      </chart>
+    </panel>
+  </row>
+  <row>
+    <panel>
+      <table>
+        <title>Top 10 Requested URLs</title>
+        <search base="appserver">
+          <query>| search host="$host$" NOT uri_path="" | top limit=10 uri_path</query>
+          <refresh>$refresh_token$</refresh>
+          <refreshType>delay</refreshType>
+        </search>
+        <option name="count">10</option>
+        <option name="refresh.display">progressbar</option>
+        <format type="number" field="percent">
+          <option name="unit">%</option>
+        </format>
+      </table>
+    </panel>
+    <panel>
+      <event>
+        <title>Last 10 Log Entries</title>
+        <search>
+          <query>host="$host$" tag=appserver | head 10</query>
+          <earliest>$myTime.earliest$</earliest>
+          <latest>$myTime.latest$</latest>
+        </search>
+      </event>
+    </panel>
+  </row>
+</form>

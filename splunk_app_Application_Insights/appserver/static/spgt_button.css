@@ -1,0 +1,506 @@
+  /*spgt_button:112716 : grdhg24 */
+/* begin added font selection */
+@font-face {font-family: 'helvetica-neue-light';src: url('fonts/helveticaneue-light-webfont.eot');src: url('fonts/helveticaneue-light-webfont.eot?#iefix') format('embedded-opentype'),url('fonts/helveticaneue-light-webfont.woff') format('woff'),url('fonts/helveticaneue-light-webfont.ttf') format('truetype');}
+@font-face {font-family: 'open-sansregular';src: url('fonts/OpenSans-Regular-webfont.eot');src: url('fonts/OpenSans-Regular-webfont.eot?#iefix') format('embedded-opentype'),url('fonts/OpenSans-Regular-webfont.woff') format('woff'),url('fonts/OpenSans-Regular-webfont.ttf') format('truetype'),url('fonts/OpenSans-Regular-webfont.svg#open_sansregular') format('svg');font-weight: normal;font-style: normal;}
+@font-face {font-family: 'ubunturegular';src: url('ubuntu-regular-webfont.eot');src: url('ubuntu-regular-webfont.eot?#iefix') format('embedded-opentype'),url('ubuntu-regular-webfont.woff') format('woff'),url('ubuntu-regular-webfont.ttf') format('truetype'),url('ubuntu-regular-webfont.svg#ubunturegular') format('svg');font-weight: normal;font-style: normal;}
+@font-face {font-family: 'sevenet_7regular';src: url('sevenet7-webfont.eot');src: url('sevenet7-webfont.eot?#iefix') format('embedded-opentype'),url('sevenet7-webfont.woff') format('woff'),url('sevenet7-webfont.ttf') format('truetype'),url('sevenet7-webfont.svg#sevenet_7regular') format('svg');font-weight: normal;font-style: normal;}
+@font-face {font-family: 'splidget.extend';src: url('fonts/splidget.extend.eot');src: url('fonts/splidget.extend.eot?#iefix') format('embedded-opentype'),url('fonts/splidget.extend.woff') format('woff'),url('fonts/splidget.extend.ttf') format('truetype'),url('fonts/splidget.extend.svg#splidget.extend') format('svg');font-weight: normal;font-style: normal;}
+/* end font selection */
+/* begin global styling for dom objects */
+div [id^="btn_ele"] .dashboard-row .dashboard-panel .panel-body.html {
+    background-image: none !important;
+		background-color: transparent !important;
+    padding:0px !important;
+    width:auto !important;
+    border-top:0px;
+}
+div [id^="btn_ele"] .btn {
+    float:left;
+}
+/* end global styling for dom objects */
+/* begin btn group style definition */
+/* On page btn-group definition. This keeps buttons together on individual pages*/
+.btn-group1 {
+    vertical-align: middle;
+    white-space: nowrap;
+    padding-top:0px;
+}
+/*new btn-group definition for fixed buttons on bottom right. Customize if you wish*/
+.btn_group_fixed {
+	position: fixed;
+  bottom: 30px;
+  right: 30px;
+  vertical-align: middle;
+}
+/* border fix for buttons sitting side by side: btn-group1 explicitly defined for easy button*/
+.btn-group1 > .btn + .btn {
+    margin-left: -1px;
+}
+.btn-config {
+    margin-top: 5px;
+}
+h3 .h3-title {
+    margin-top:5px;
+}
+/* end btn group style definition */
+/*  This is the button container for ON PAGE buttons. Its properties decides where your button/buttons
+end up on the page. If you use multiple buttons make sure you change the id, for
+example #btn-element2 ... and so on  */
+/* This is the grouping for page <##> */
+#btn_element1 {
+		position:absolute !important;
+    vertical-align: middle;
+    top: -41px !important;
+    left:191px !important;
+    width: auto !important;
+}
+#btn_element2 {
+	position:absolute !important;
+  vertical-align: middle;
+  top: -203px !important;
+  left:142px !important;
+  width: auto !important
+}
+/* This is the grouping for page <##> */
+#btn_element3 {
+	position:absolute !important;
+  vertical-align: middle;
+  top: -203px !important;
+  left:142px !important;
+  width: auto !important
+}
+/* This is the grouping for page <##> */
+#btn_element4 {
+	position:absolute !important;
+    vertical-align: middle;
+    top: -41px !important;
+    left:344px !important;
+    width: auto !important
+}
+/* This is the grouping for the Splunkpad Splidget buttons*/
+#btn_element5 {
+	position:absolute !important;
+    vertical-align: middle;
+    top: -46px !important;
+    left:785px !important;
+    width: auto !important
+  }
+/* This is the grouping for Feedback Splidget buttons*/
+#btn_element6 {
+	position:absolute !important;
+    vertical-align: middle;
+    top: -50px !important;
+    left: 600px !important;
+    width: 350px !important;
+}
+/*#btn_element7 {
+	position:absolute !important;
+    vertical-align: middle;
+    top: -80px !important;
+    left: 550px !important;
+    width: auto !important
+}*/
+#btn_element7 {
+	position:absolute !important;
+    vertical-align: middle;
+    top: 10px !important;
+    left: 150px !important;
+    width: auto !important;
+    z-index:500;
+}
+/* End button container defitinitions for app */
+/* begin style options for buttons*/
+/* I think this is inherited from bootstrap.min but I included it to be able to mod it*/
+.btn {
+  display: inherit !important;
+  padding: 4px 12px;
+  font-size: 12px;
+  line-height: 16px;
+  text-align: center;
+  vertical-align: middle;
+  cursor: pointer;
+  background-color: #f3f3f3;
+  background-image: linear-gradient(180deg,#f7f7f7,#eee);
+  background-color: #eee;
+  border: 1px solid #bfbfbf;
+  border-top-color: #bfbfbf;
+  border-bottom-color: #bfbfbf;
+  box-shadow: inset 0 1px 0 #fcfcfc;
+  text-shadow: none;
+  border-radius: 4px;
+}
+.op-8 {
+  opacity: .8 !important;
+}
+.btn .middle .right .left{
+	background: rgba(255,255,255,1);/* Old Browsers */
+	background: -moz-linear-gradient(top, rgba(255,255,255,1) 0%, rgba(247,247,247,1) 47%, rgba(233,233,233,1) 100%); /* FF3.6+ */
+	background: -webkit-gradient(left top, left bottom, color-stop(0%, rgba(255,255,255,1)), color-stop(47%, rgba(247,247,247,1)), color-stop(100%, rgba(233,233,233,1)));/* Chrome, Safari4+ */
+	background: -webkit-linear-gradient(top, rgba(255,255,255,1) 0%, rgba(247,247,247,1) 47%, rgba(233,233,233,1) 100%); /* Chrome10+,Safari5.1+ */
+	background: -o-linear-gradient(top, rgba(255,255,255,1) 0%, rgba(247,247,247,1) 47%, rgba(233,233,233,1) 100%); /* Opera 11.10+ */
+	background: -ms-linear-gradient(top, rgba(255,255,255,1) 0%, rgba(247,247,247,1) 47%, rgba(233,233,233,1) 100%); /* IE 10+ */
+	background: linear-gradient(to bottom, rgba(255,255,255,1) 0%, rgba(247,247,247,1) 47%, rgba(233,233,233,1) 100%);/* W3C */
+	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffffff', endColorstr='#e9e9e9', GradientType=0 );/* IE6-9 */
+	border: 1px solid #BFBFBF;
+	color: #333;
+	box-shadow: 1px #FDFDFD inset;
+	background-position: 0px center;
+	text-shadow: none;
+	border-radius: 4px;
+  padding: 1px 8px !important;
+}
+.btn-green {
+    background-color: #61a035;
+    background-image: -moz-linear-gradient(top, #65a637, #5c9732);
+    background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#65a637), to(#5c9732));
+    background-image: -webkit-linear-gradient(top, #65a637, #5c9732);
+    background-image: -o-linear-gradient(top, #65a637, #5c9732);
+    background-image: linear-gradient(to bottom, #65a637, #5c9732);
+    background-repeat: repeat-x;
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#65a637', endColorstr='#5c9732', GradientType=0);
+    border: 1px solid #4e802a;
+    border-bottom-color: #4e802a;
+    border-top-color: #4e802a;
+    color: #fff;
+    -webkit-box-shadow: inset 0 1px 0 #6aae3a;
+    -moz-box-shadow: inset 0 1px 0 #6aae3a;
+    box-shadow: inset 0 1px 0 #6aae3a;
+    text-shadow: none;
+    border-radius: 4px;
+    padding: 8px !important;
+    font-size:12px;
+}
+.btn-red {
+background: rgba(248,80,50,1);
+background: -moz-linear-gradient(top, rgba(248,80,50,1) 0%, rgba(240,102,87,1) 49%, rgba(231,56,39,1) 100%);
+background: -webkit-gradient(left top, left bottom, color-stop(0%, rgba(248,80,50,1)), color-stop(49%, rgba(240,102,87,1)), color-stop(100%, rgba(231,56,39,1)));
+background: -webkit-linear-gradient(top, rgba(248,80,50,1) 0%, rgba(240,102,87,1) 49%, rgba(231,56,39,1) 100%);
+background: -o-linear-gradient(top, rgba(248,80,50,1) 0%, rgba(240,102,87,1) 49%, rgba(231,56,39,1) 100%);
+background: -ms-linear-gradient(top, rgba(248,80,50,1) 0%, rgba(240,102,87,1) 49%, rgba(231,56,39,1) 100%);
+background: linear-gradient(to bottom, rgba(248,80,50,1) 0%, rgba(240,102,87,1) 49%, rgba(231,56,39,1) 100%);
+filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#f85032', endColorstr='#e73827', GradientType=0 );
+box-shadow: 1px #FDFDFD inset;
+background-position: 0px center;
+text-shadow: none;
+border-radius: 4px;
+padding: 10px !important;
+color:#fff;
+font-size:12px;
+margin-bottom:15px;
+}
+.btn-red a{
+ color:#fff;
+}
+.btn-blue {
+    background-color: #4691CA;
+    background-image: -moz-linear-gradient(top, #4691CA, #3863a0);
+    background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#4691CA), to(#3863a0));
+    background-image: -webkit-linear-gradient(top, #4691CA, #3863a0);
+    background-image: -o-linear-gradient(top, #4691CA, #3863a0);
+    background-image: linear-gradient(to bottom, #4691CA, #3863a0);
+    background-repeat: repeat-x;
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#4691CA', endColorstr='#3863a0', GradientType=0);
+    border: 1px solid #3854A2;
+    border-bottom-color: #3854A2;
+    border-top-color:#3854A2;
+    color: #fff;
+    -webkit-box-shadow: inset 0 1px 0  #4691CA;
+    -moz-box-shadow: inset 0 1px 0  #4691CA;
+    box-shadow: inset 0 1px 0  #4691CA;
+    text-shadow: none;
+}
+.btn-yellow {
+    background-color: #F2B827;
+    background-image: -moz-linear-gradient(top, #F2B827, #D4A303);
+    background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#F2B827), to(#D4A303));
+    background-image: -webkit-linear-gradient(top, #F2B827, #D4A303);
+    background-image: -o-linear-gradient(top, #F2B827, #D4A303);
+    background-image: linear-gradient(to bottom, #F2B827,#D4A303);
+    background-repeat: repeat-x;
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#F2B827', endColorstr='#D4A303', GradientType=0);
+    border: 1px solid #DAA600;
+    border-bottom-color: #DAA600;
+    border-top-color:#DAA600;
+    color: #fff;
+    -webkit-box-shadow: inset 0 1px 0  #FFC302;
+    -moz-box-shadow: inset 0 1px 0  #FFC302;
+    box-shadow: inset 0 1px 0  #FFC302;
+    text-shadow: none;
+}
+.btn-ltgray {
+    background-color: #f7f7f7;
+    background-image: -moz-linear-gradient(top, #f7f7f7, #eee);
+    background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#f7f7f7), to(#eee));
+    background-image: -webkit-linear-gradient(top, #f7f7f7, #eee);
+    background-image: -o-linear-gradient(top, #f7f7f7, #eee);
+    background-image: linear-gradient(to bottom, #f7f7f7, #eee);
+    background-repeat: repeat-x;
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#f7f7f7', endColorstr='#eee', GradientType=0);
+    border: 1px solid #eee;
+    border-bottom-color: #eee;
+    border-top-color: #eee;
+    color: #000;
+    -webkit-box-shadow: inset 0 1px 0 #333;
+    -moz-box-shadow: inset 0 1px 0 #333;
+    box-shadow: inset 0 1px 0 #333;
+    text-shadow: none;
+}
+.btn-medgray {
+    background-color: #eeeeee;
+    background-image: -moz-linear-gradient(top, #eeeeee, #ddd);
+    background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#eeeeee), to(#ddd));
+    background-image: -webkit-linear-gradient(top, #eeeeee, #ddd);
+    background-image: -o-linear-gradient(top, #eeeeee, #ddd);
+    background-image: linear-gradient(to bottom, #eeeeee, #ddd);
+    background-repeat: repeat-x;
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#eeeeee', endColorstr='#ddd', GradientType=0);
+    border: 1px solid #ddd;
+    border-bottom-color: #ddd;
+    border-top-color: #ddd;
+    color: #000;
+    -webkit-box-shadow: inset 0 1px 0 #F2F2F2;
+    -moz-box-shadow: inset 0 1px 0 #666;
+    box-shadow: inset 0 1px 0 #666;
+    text-shadow: none;
+}
+/* end button style examples */
+/* end styles used for buttons on this page */
+/*mouseover for splidget icons*/
+.link {
+    cursor: pointer !important;
+    background-color: #f2;
+    padding:4px;
+}
+/* end mouseover for splidget icons*/
+/* button icon overrides : look at /en-US/static/docs/style/style-guide.html#icons */
+.icon-modal-small {
+    font-size: .85em;
+    vertical-align: middle;
+}
+.icon-modal-medium {
+    font-size: 1.75em;
+    vertical-align: middle;
+}
+.icon-modal-large {
+    font-size: 2.25em;
+    vertical-align: middle;
+}
+.icon-modal-xlarge {
+    font-size: 2.75em;
+    vertical-align: middle;
+}
+.icon-modal-xxlarge {
+		font-size: 3.5em;
+		vertical-align: middle;
+    cursor:help;
+}
+.float-l {
+  float:left;
+}
+.float-r {
+  float:right;
+}
+.line-1 {
+  height:1em;
+}
+.line-2 {
+  height:2em;
+}
+
+  /* this is for custom glyph set. renamed to not interfere with font-awesome that comes with Splunk */
+
+/* Begin color definitions for button identifier glyphs */
+.icon-color-scratch{
+  color: #ffb800;
+  /*   text-shadow: 0 1px 1px rgba(0,0,0,.15) ;*/
+}
+.icon-color-easy{
+  color: #BE1700;
+  /*   text-shadow: 0 1px 1px rgba(0,0,0,.15) ;*/
+}
+.icon-color-searchfu{
+  color: #26AFAC;
+  /*   text-shadow: 0 1px 1px rgba(0,0,0,.15) ;*/
+}
+.icon-color-feed{
+  color: #0F92C8;
+  /* text-shadow: 0 1px 1px rgba(0,0,0,.15) ;*/
+}
+.icon-color-search{
+  color: #26AFAC;
+  /*text-shadow: 0 1px 1px rgba(0,0,0,.25) ;*/
+}
+.icon-color-misc{
+  color: #6A5AA0;
+  /*text-shadow: 0 1px 1px rgba(0,0,0,.25) ;*/
+}
+.icon-color-config{
+  color: #63A72E;
+  /*text-shadow: 0 1px 1px rgba(0,0,0,.25) ;*/
+}
+.icon-color-severe{
+  color: #BE1700;
+  /*text-shadow: 0 1px 1px rgba(0,0,0,.25) ;*/
+}
+.icon-color-high {
+    color: #ff7e00;
+  /*text-shadow: 0 1px 1px rgba(0,0,0,.25) ;*/
+}
+.icon-color-elevated{
+  color: #ffb800;
+  /*text-shadow: 0 1px 1px rgba(0,0,0,.25) ;*/
+}
+.icon-color-low{
+  color: #63A72E;
+  /*text-shadow: 0 1px 1px rgba(0,0,0,.25) ;*/
+}
+.icon-color-info{
+  color: #0F92C8;
+  /* text-shadow: 0 1px 1px rgba(0,0,0,.25) ;*/
+}
+.box-shadow (@shadow: 0 1px 3px rgba(0,0,0,.25)) {
+  -webkit-box-shadow: @shadow; // iOS <4.3 & Android <4.1
+  box-shadow: @shadow;
+}
+
+[class*='icn-']:before{
+	 display: inline-block;
+   font-family: 'splidget.extend';
+   font-style: normal;
+   font-weight: normal;
+   speak:none;
+   -webkit-font-smoothing: antialiased;
+   -moz-osx-font-smoothing: grayscale
+}
+.icn-searchfu:before{content:'\0041';}
+.icn-easy:before{content:'\0042';}
+.icn-welcome:before{content:'\0043';}
+.icn-greater-than:before{content:'\0044';}
+.icn-splk-mch-learn:before{content:'\0045';}
+.icn-splunkpad:before{content:'\0046';}
+.icn-splidget:before{content:'\0047';}
+.icn-feedback:before{content:'\0048';}
+.icn-assess:before{content:'\0049';}
+.icn-data-curator:before{content:'\004a';}
+.icn-toggle-up:before{content:'\004b';}
+.icn-toggle-down:before{content:'\004c';}
+.icn-normal-state:before{content:'\004d';}
+.icn-informational-state:before{content:'\004e';}
+.icn-poor-state:before{content:'\004f';}
+.icn-beyond-fatal-state:before{content:'\0050';}
+.icn-fatal-state:before{content:'\0051';}
+.icn-os-app:before{content:'\0052';}
+.icn-app:before{content:'\0053';}
+.icn-os:before{content:'\0054';}
+.icn-vm:before{content:'\0055';}
+.icn-extinguish:before{content:'\0056';}
+.icn-fire:before{content:'\0057';}
+.icn-location:before{content:'\0058';}
+.icn-globe:before{content:'\0059';}
+.icn-num-1:before{content:'\005a';}
+.icn-num-2:before{content:'\0061';}
+.icn-num-3:before{content:'\0062';}
+.icn-num-4:before{content:'\0063';}
+.icn-num-5:before{content:'\0064';}
+.icn-os-linux:before{content:'\0065';}
+.icn-os-windows:before{content:'\0066';}
+.icn-user-experience:before{content:'\0067';}
+.icn-filter:before{content:'\0068';}
+.icn-firewall:before{content:'\0069';}
+.icn-bar-chart:before{content:'\006a';}
+.icn-rfid:before{content:'\006b';}
+.icn-internet-of-things:before{content:'\006c';}
+.icn-quote-left:before{content:'\006d';}
+.icn-quote-right:before{content:'\006e';}
+.icn-ipad:before{content:'\006f';}
+.icn-iphone:before{content:'\0070';}
+.icn-home:before{content:'\0071';}
+.icn-move:before{content:'\0072';}
+.icn-healthcare:before{content:'\0073';}
+.icn-na:before{content:'\0074';}
+.icn-tag:before{content:'\0075';}
+.icn-refresh:before{content:'\0076';}
+.icn-process-analytics:before{content:'\0077';}
+.icn-risk-management:before{content:'\0078';}
+.icn-mixture:before{content:'\0079';}
+.icn-log-file:before{content:'\007a';}
+.icn-script:before{content:'\0030';}
+.icn-stream-lake:before{content:'\0031';}
+.icn-wire-data:before{content:'\0032';}
+.icn-universal-collection:before{content:'\0033';}
+.icn-download:before{content:'\0034';}
+.icn-toggle-up:before{content:'\0035';}
+.icn-toggle-down:before{content:'\0036';}
+.icn-enhanced-search:before{content:'\0037';}
+.icn-process-fork:before{content:'\0038';}
+.icn-cloud:before{content:'\0039';}
+.icn-load-balancer:before{content:'\0021';}
+.icn-datastore:before{content:'\0022';}
+.icn-datastores:before{content:'\0023';}
+.icn-router:before{content:'\0024';}
+.icn-cluster-management:before{content:'\0025';}
+.icn-datacenter:before{content:'\0026';}
+.icn-datacenters:before{content:'\0027';}
+.icn-server:before{content:'\0028';}
+.icn-virtual-indexer:before{content:'\0029';}
+.icn-indexer:before{content:'\002a';}
+.icn-forwarder:before{content:'\002b';}
+.icn-forwarder-management:before{content:'\002c';}
+.icn-search-head:before{content:'\002d';}
+.icn-pivot:before{content:'\002e';}
+.icn-network-switch:before{content:'\002f';}
+.icn-stop:before{content:'\005b';}
+.icn-alert:before{content:'\005c';}
+.icn-checkmark:before{content:'\005d';}
+.icn-delete:before{content:'\005e';}
+.icn-bug:before{content:'\005f';}
+.icn-packaged-malware:before{content:'\0060';}
+.icn-malware:before{content:'\007b';}
+.icn-botnet:before{content:'\007c';}
+.icn-virus:before{content:'\007d';}
+.icn-attacker-general:before{content:'\007e';}
+.icn-attacker-internal:before{content:'\003f';}
+/* end webfont glyphs */
+/* end color definitions for button identifier glyphs */
+
+/* Button Grouping Styling - This makes the left and right end buttons have curved corners,
+the middle button retains square corners. You will need to apply manually*/
+.left{
+  border-radius: 4px 0px 0px 4px !important;
+  border-right-color: #F9F9F9;
+}
+.left :hover{
+  border-radius: 4px 0px 0px 4px !important;
+  border-right-color: #F9F9F9;
+}
+.right{
+  border-radius: 0px 4px 4px 0px !important;
+}
+.middle{
+  border-radius: 0px 0px 0px 0px !important;
+}
+.full{
+  border-radius: 4px 4px 4px 4px !important;
+}
+.m-right {
+  margin-right:7px;
+}
+.m-left {
+  margin-left:7px;
+}
+.m-8 {
+  margin:8px;
+}
+.icn-space {
+  letter-spacing:70px;
+}
+.a-w a {
+	color: #fff;
+	text-decoration: underline;
+	cursor: pointer;
+}
+.a-w a:hover{
+	color: #fff;
+	text-decoration: none;
+	cursor: pointer;
+}

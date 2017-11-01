@@ -1,0 +1,307 @@
+<form>
+  <label>Load Balancers</label>
+  <description>Insight into the performance of your Load Balancers</description>
+  <fieldset submitButton="false">
+    <input type="time" token="myTime" searchWhenChanged="true">
+      <label>Time Period</label>
+      <default>
+        <earliest>-15m</earliest>
+        <latest>now</latest>
+      </default>
+    </input>
+    <input type="dropdown" token="host" searchWhenChanged="true">
+      <label>Host</label>
+      <fieldForLabel>host</fieldForLabel>
+      <fieldForValue>host</fieldForValue>
+      <search base="loadbalancer">
+        <query> | fields host | dedup host</query>
+        <earliest>$myTime.earliest$</earliest>
+        <latest>$myTime.latest$</latest>
+      </search>
+      <choice value="*">All</choice>
+      <default>*</default>
+      <initialValue>*</initialValue>
+    </input>
+  </fieldset>
+  
+   <search id="loadbalancer" ref="base_search_load_balancer">
+    <earliest>$myTime.earliest$</earliest>
+    <latest>$myTime.latest$</latest>
+    <refresh>$refresh_token$</refresh>
+    <refreshType>delay</refreshType>
+  </search>
+ 
+ 
+  <row>
+    <panel>
+      <chart>
+        <title>Concurrent Sessions</title>
+        <search base="loadbalancer">
+          <query>| search host="$host$"
+| timechart avg("Concurrent Sessions") as "Concurrent Sessions"  
+| predict "Concurrent Sessions" future_timespan=30</query>
+        </search>
+        <!--  <option name="charting.axisLabelsX.majorLabelVisibility">hide</option> -->
+        <option name="charting.axisTitleX.visibility">collapsed</option>
+        <option name="charting.axisTitleY.visibility">collapsed</option>
+        <option name="charting.chart">area</option>
+        <option name="charting.chart.nullValueMode">connect</option>
+        <option name="charting.chart.showDataLabels">none</option>
+        <option name="charting.legend.placement">top</option>
+        <option name="refresh.display">progressbar</option>
+        <option name="refresh.time.visible">0</option>
+      </chart>
+    </panel>
+    <panel>
+      <chart>
+        <title>Round Trip Time</title>
+        <search base="loadbalancer">
+          <query>| search host="$host$"
+| timechart avg(rtt) as "Round Trip Time (ms)"
+| predict "Round Trip Time (ms)" future_timespan=30</query>
+        </search>
+        <!--  <option name="charting.axisLabelsX.majorLabelVisibility">hide</option> -->
+        <option name="charting.axisTitleX.visibility">collapsed</option>
+        <option name="charting.axisTitleY.visibility">collapsed</option>
+        <option name="charting.chart">area</option>
+        <option name="charting.chart.nullValueMode">connect</option>
+        <option name="charting.chart.showDataLabels">none</option>
+        <option name="charting.legend.placement">top</option>
+        <option name="refresh.display">progressbar</option>
+        <option name="refresh.time.visible">0</option>
+      </chart>
+    </panel>
+    <panel>
+      <chart>
+        <title>SSL Transactions per Second</title>
+        <search base="loadbalancer">
+          <query>| search host="$host$"
+| timechart avg("SSL Transactions per Second") as "SSL Transactions per Second"
+| predict "SSL Transactions per Second" future_timespan=30</query>
+        </search>
+        <!--  <option name="charting.axisLabelsX.majorLabelVisibility">hide</option> -->
+        <option name="charting.axisTitleX.visibility">collapsed</option>
+        <option name="charting.axisTitleY.visibility">collapsed</option>
+        <option name="charting.chart">area</option>
+        <option name="charting.chart.nullValueMode">connect</option>
+        <option name="charting.chart.showDataLabels">none</option>
+        <option name="charting.legend.placement">top</option>
+        <option name="refresh.display">progressbar</option>
+        <option name="refresh.time.visible">0</option>
+      </chart>
+    </panel>
+  </row>
+  <row>
+    <panel>
+      <chart>
+        <title>Client Connections</title>
+        <search base="loadbalancer">
+          <query>| search host="$host$"
+| timechart avg(client_connections) as "Connections"
+| predict "Connections" future_timespan=30</query>
+        </search>
+        <!--  <option name="charting.axisLabelsX.majorLabelVisibility">hide</option> -->
+        <option name="charting.axisTitleX.visibility">collapsed</option>
+        <option name="charting.axisTitleY.visibility">collapsed</option>
+        <option name="charting.chart">area</option>
+        <option name="charting.chart.nullValueMode">connect</option>
+        <option name="charting.chart.showDataLabels">none</option>
+        <option name="charting.legend.placement">top</option>
+        <option name="refresh.display">progressbar</option>
+        <option name="refresh.time.visible">0</option>
+      </chart>
+    </panel>
+    <panel>
+      <chart>
+        <title>Client Throughput</title>
+        <search base="loadbalancer">
+          <query>| search host="$host$"
+| timechart avg(client_throughput) as throughput 
+| eval throughput = throughput/(1024*1024*1024) 
+| rename throughput as "Client Throughput (GB/s)"
+| predict "Client Throughput (GB/s)" future_timespan=30</query>
+        </search>
+        <!--  <option name="charting.axisLabelsX.majorLabelVisibility">hide</option> -->
+        <option name="charting.axisTitleX.visibility">collapsed</option>
+        <option name="charting.axisTitleY.visibility">collapsed</option>
+        <option name="charting.chart">area</option>
+        <option name="charting.chart.nullValueMode">connect</option>
+        <option name="charting.chart.showDataLabels">none</option>
+        <option name="charting.legend.placement">top</option>
+        <option name="refresh.display">progressbar</option>
+        <option name="refresh.time.visible">0</option>
+      </chart>
+    </panel>
+    <panel>
+      <table>
+        <title>Top 10 Client/User IPs</title>
+        <search>
+          <query>tag=loadbalancer 
+tag=performance 
+tag=network 
+
+interface_connections=* 
+
+| stats latest(interface_connections) as "Connections" by src 
+| rename src as "Client" 
+| sort limit=10 -interface_connections</query>
+          <earliest>$myTime.earliest$</earliest>
+          <latest>$myTime.latest$</latest>
+        </search>
+        <option name="count">10</option>
+        <option name="dataOverlayMode">none</option>
+        <option name="drilldown">cell</option>
+        <option name="refresh.time.visible">0</option>
+        <option name="rowNumbers">false</option>
+        <option name="wrap">true</option>
+      </table>
+    </panel>
+  </row>
+  <row>
+    <panel>
+      <chart>
+        <title>Server Connections</title>
+        <search base="loadbalancer">
+          <query>| search host="$host$"
+| timechart avg(server_connections) as "Connections"
+| predict "Connections" future_timespan=30</query>
+        </search>
+        <!--  <option name="charting.axisLabelsX.majorLabelVisibility">hide</option> -->
+        <option name="charting.axisTitleX.visibility">collapsed</option>
+        <option name="charting.axisTitleY.visibility">collapsed</option>
+        <option name="charting.chart">area</option>
+        <option name="charting.chart.nullValueMode">connect</option>
+        <option name="charting.chart.showDataLabels">none</option>
+        <option name="charting.legend.placement">top</option>
+        <option name="refresh.display">progressbar</option>
+        <option name="refresh.time.visible">0</option>
+      </chart>
+    </panel>
+    <panel>
+      <chart>
+        <title>Server Throughput</title>
+        <search base="loadbalancer">
+          <query>| search host="$host$"
+| timechart avg(server_throughput) as throughput 
+| eval throughput = throughput/(1024*1024*1024) 
+| rename throughput as "Server Throughput (GB/s)"
+| predict "Server Throughput (GB/s)" future_timespan=30</query>
+        </search>
+        <!--  <option name="charting.axisLabelsX.majorLabelVisibility">hide</option> -->
+        <option name="charting.axisTitleX.visibility">collapsed</option>
+        <option name="charting.axisTitleY.visibility">collapsed</option>
+        <option name="charting.chart">area</option>
+        <option name="charting.chart.nullValueMode">connect</option>
+        <option name="charting.chart.showDataLabels">none</option>
+        <option name="charting.legend.placement">top</option>
+        <option name="refresh.display">progressbar</option>
+        <option name="refresh.time.visible">0</option>
+      </chart>
+    </panel>
+    <panel>
+      <chart>
+        <title>Server 5XX Responses</title>
+        <search base="loadbalancer">
+          <query>| search host="$host$"
+| timechart avg(5XX_codes) as "5XX Responses"
+| predict "5XX Responses" future_timespan=30</query>
+        </search>
+        <!--  <option name="charting.axisLabelsX.majorLabelVisibility">hide</option> -->
+        <option name="charting.axisTitleX.visibility">collapsed</option>
+        <option name="charting.axisTitleY.visibility">collapsed</option>
+        <option name="charting.chart">area</option>
+        <option name="charting.chart.nullValueMode">connect</option>
+        <option name="charting.chart.showDataLabels">none</option>
+        <option name="charting.legend.placement">top</option>
+        <option name="refresh.display">progressbar</option>
+        <option name="refresh.time.visible">0</option>
+      </chart>
+    </panel>
+  </row>
+  <row>
+    <panel>
+      <table>
+        <title>Pools</title>
+        <search>
+          <query>tag=loadbalancer 
+tag=performance 
+tag=network  
+
+
+pool=* (NOT node=*) 
+| stats latest(avl_status_string) as "Latest Availability" by pool 
+| join type=left pool [search tag=loadbalancer tag=performance tag=network tag=loadbalancer_web 
+
+| stats count as "Connections", avg(rtt) as "Round Trip Time (ms)", values(node) as "Members", dc(node) as "Member Count" by pool 
+
+| eval Members = mvjoin(Members,",")] 
+| eval "Round Trip Time (ms)" = round('Round Trip Time (ms)',2) 
+| rename pool as Pool 
+
+| table Pool, "Latest Availability", "Connections", "Round Trip Time (ms)", "Member Count", "Members"</query>
+          <earliest>$myTime.earliest$</earliest>
+          <latest>$myTime.latest$</latest>
+        </search>
+      </table>
+    </panel>
+    <panel>
+      <table>
+        <title>Pool Members</title>
+        <search>
+          <query>tag=loadbalancer 
+tag=performance 
+tag=network  
+
+node=* (NOT pool=*) 
+
+| stats latest(avl_status_string) as "Latest Availability" by node 
+
+| join type=left node [search  tag=loadbalancer tag=performance tag=network tag=loadbalancer_web 
+
+| stats count as "Connections", avg(rtt) as "Round Trip Time (ms)", count(eval(response_code &gt;= 400 AND response_code &lt; 500)) as "4xx Errors", count(eval(response_code &gt;= 500 AND response_code &lt; 600)) as "5xx Errors" by node, pool] 
+
+| where isnotnull(pool) 
+
+| eval "Round Trip Time (ms)" = round('Round Trip Time (ms)',2) 
+| rename node as Node, pool as Pool 
+
+| table Pool, Node, "Latest Availability", "Connections", "Round Trip Time (ms)", "4xx Errors", "5xx Errors"</query>
+          <earliest>$myTime.earliest$</earliest>
+          <latest>$myTime.latest$</latest>
+        </search>
+      </table>
+    </panel>
+  </row>
+  <row>
+    <panel>
+      <chart>
+        <title>Count of Log Entries</title>
+        <search>
+          <query>tag=loadbalancer 
+tag=performance 
+tag=network 
+
+
+| timechart count(_raw) as "Events"</query>
+          <earliest>$myTime.earliest$</earliest>
+          <latest>$myTime.latest$</latest>
+        </search>
+        <option name="charting.chart">line</option>
+      </chart>
+    </panel>
+    <panel>
+      <event>
+        <title>Last 10 Log Entries</title>
+        <search>
+          <query>tag=loadbalancer 
+tag=performance 
+tag=network
+
+limit 10</query>
+          <earliest>$myTime.earliest$</earliest>
+          <latest>$myTime.latest$</latest>
+        </search>
+      </event>
+    </panel>
+  </row>
+</form>

@@ -1,0 +1,103 @@
+/* ----- Panel Header Background Color and Font ----- */
+
+.fieldset .input {
+    width: 600px;
+}
+
+.splunk-choice-input {
+    padding-bottom: 0px;
+}
+
+.dashboard-row .dashboard-panel {
+    //border: 1px solid #CCC;
+    margin: 0px 10px 10px 0px;
+    position: relative;
+}
+
+.dashboard-row .dashboard-panel h2.panel-title {
+text-align: center;
+font-size: 20px;
+font-weight: 500;
+background-color: #c7d2de;
+//background-color: rgb(207, 207, 207);
+padding: 5px 5px 5px 5px;
+}
+
+.dashboard-row .dashboard-panel .panel-head h3 {
+text-align: center;
+line-height: 1;
+margin: 0;
+padding: 5px 5px 5px 5px;
+color: #333;
+}
+
+.dashboard-row .dashboard-panel .panel-element-row div.single {
+    float: left;
+    min-width: 100px;
+}
+
+
+.custom-result-value {
+    font-size: 55px;
+    margin: 35px auto;
+    text-align: center;
+    font-weight: bold;
+    color: rgb(85, 85, 85);
+}
+
+.custom-result-value:before {
+    font-family: "Splunk Icons";
+    font-style: normal;
+    font-weight: normal;
+    text-decoration: inherit;
+    font-size: 110%;
+}
+
+.severe.custom-result-value:before {
+    content: "\2297";
+}
+
+.severe.custom-result-value {
+    color: rgb(217, 63, 60);
+}
+
+.high.custom-result-value {
+    color: rgb(245, 143, 57);
+}
+
+.high.custom-result-value:before {
+    content: "\ECD4";
+}
+
+.elevated.custom-result-value {
+    color: rgb(247, 188, 56);
+}
+
+.elevated.custom-result-value:before {
+    content: "\26A0";
+}
+
+.low.custom-result-value {
+    color: rgb(101, 166, 55);
+}
+
+.low.custom-result-value:before {
+    content: "\ECD3";
+}
+
+.guarded.custom-result-value {
+    color: rgb(109, 183, 198);
+}
+
+.guarded.custom-result-value:before {
+    content: "\0049";
+}
+
+.custom-result-value.icon-only {
+    font-size: 90px;
+}
+
+.none.custom-result-value:before {
+    content: "\26AA";
+}
+
