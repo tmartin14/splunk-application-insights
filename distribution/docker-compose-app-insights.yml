@@ -1,0 +1,100 @@
+version: "3.1"
+services:
+# # # # # # # # # # # # # # # # # # # # # # # # # # # 
+#      BEFORE YOU BEGIN
+# Please make sure you have run:
+#       docker swarm init
+#
+# then you can execute this environment using:   
+#          docker-compose up -d 
+# # # # # # # # # # # # # # # # # # # # # # # # # # #  
+
+
+# Apache Web Server
+#
+# You can load the main page at http://localhost:8085.    Make up a URL to see some 404's  (http://localhost:8085/GiveMeA404)
+  webserver:
+    image: tmartin14/apache
+    hostname: webserver
+    ports:
+      - "8085:80"
+    volumes:
+       - ./logs/apache:/var/log/apache2
+    networks:
+      - app_insights
+
+
+# Tomcat Application Server
+#    NOTES:  Your JMX URI should be:   service:jmx:rmi:///jndi/rmi://<container_name>:9010/jmxrmi  
+#            Tomcat admin userid/password is admin/admin
+#
+#  There is a sample application pre-loaded at http://localhost:8080/travel,  Use that URL to drive some traffic. Make up a URL to see a 404!
+#
+  appserver:
+    image: tmartin14/tomcat_jmx
+    hostname: appserver
+    environment:
+      CATALINA_OPTS: "-Djava.rmi.server.hostnamea=appserver -Dcom.sun.management.jmxremote.port=9010 -Dcom.sun.management.jmxremote.rmi.port=9010 -Dcom.sun.management.jmxremote=true -Dcom.sun.management.jmxremote.local.only=false -Dcom.sun.management.jmxremote.ssl=false -Dcom.sun.management.jmxremote.authenticate=false" 
+    ports:
+      - "8080:8080"
+      - "9010:9010"
+    volumes:
+       - ./logs/tomcat:/usr/local/tomcat/logs
+    networks:
+      - app_insights
+
+# Wildfly (JBoss) Application Server
+#    NOTES:  Your JMX URI should be:   service:jmx:http-remoting-jmx://<container_name>:9990   service:jmx:remote+http://<container_name>:9990
+#            Tomcat admin userid/password is admin/admin
+#
+#  There is a sample application pre-loaded at http://localhost:8081/travel,  Use that URL to drive some traffic. Make up a URL to see a 404!
+#
+  # wildfly:
+  #   image: tmartin14/wildfly
+  #   hostname: wildfly
+  #   #environment:
+  #     # CATALINA_OPTS: "-Djava.rmi.server.hostnamea=appserver -Dcom.sun.management.jmxremote.port=9010 -Dcom.sun.management.jmxremote.rmi.port=9010 -Dcom.sun.management.jmxremote=true -Dcom.sun.management.jmxremote.local.only=false -Dcom.sun.management.jmxremote.ssl=false -Dcom.sun.management.jmxremote.authenticate=false" 
+  #   ports:
+  #     - "8081:8080"
+  #     - "9990:9990"
+  #   volumes:
+  #      - ./logs/wildfly:/opt/jboss/wildfly/standalone/log
+  #   networks:
+  #     - app_insights
+
+
+
+# Slunk Enterprise to collect, aggregate, investigate and visualize the data
+#
+#  You can find Splunk at http://localhost:8000/en-US/app/splunk_app_Application_Insights/  Take a look!
+#
+  splunk-enterprise:
+    image: tmartin14/splunk_for_app_insights
+    volumes:
+      - /opt/splunk/etc
+      - /opt/splunk/var
+      - ./logs:/var/app/logs
+      - ./app:/opt/splunk/etc/apps/splunk_app_Application_Insights
+    ports:
+      - "8000:8000"
+      - "9997:9997"
+      - "8088:8088"
+      - "8089:8089"
+    hostname: splunk-enterprise
+    environment:
+      SPLUNK_START_ARGS: "--accept-license --answer-yes"
+      SPLUNK_ENABLE_LISTEN: 9997
+      SPLUNK_ADD: tcp 1514
+      SPLUNK_USER: root
+      SPLUNK_CMD_1: "cmd python -c 'open(\"/opt/splunk/etc/.ui_login\", \"a\").close()'"
+    networks:
+      - app_insights
+
+
+# This is the network that allows all of our components to talk to each other.
+networks:
+  app_insights:
+    driver: overlay
+
+
+
