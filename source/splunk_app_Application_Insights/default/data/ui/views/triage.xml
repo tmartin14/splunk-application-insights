@@ -1,13 +1,19 @@
 <form>
   <label>Triage</label>
   <description>When something goes wrong, how do you find the root cause? Find a lot of similar events and look at what preceeded them.</description>
-  <!--   style="z-index:-1" -->
-  <!-- -->
+  <search id="pattern_search">
+    <query>host=$hosts$ index=$indexes$ sourcetype=$sourcetypes$ (crit* OR fail* OR fatal OR except* OR err* OR status &gt; 499) NOT success* OR NOT INFO OR NOT WARN $terms$
+                  | cluster showcount=t 
+                  | rename _raw as "Event Audit Trail" cluster_count as Occurrences sourcetype as Sourcetype host as Host 
+    </query>
+    <earliest>$myTime.earliest$</earliest>
+    <latest>$myTime.latest$</latest>
+  </search>
   <fieldset submitButton="false" autoRun="false">
     <input type="time" token="myTime" searchWhenChanged="true">
       <label>Time</label>
       <default>
-        <earliest>-60m@m</earliest>
+        <earliest>-15m</earliest>
         <latest>now</latest>
       </default>
     </input>
@@ -39,7 +45,7 @@
         <latest>$myTime.latest$</latest>
       </search>
     </input>
-    <input type="multiselect" token="indexes">
+    <input type="multiselect" token="indexes" searchWhenChanged="true">
       <label>Index(es)</label>
       <choice value="*">All</choice>
       <delimiter>OR index=</delimiter>
@@ -93,15 +99,31 @@
           </div>
         </div>
       </html>
+    </panel>
+  </row>
+  <row>
+    <panel>
+      <viz type="timeline_app.timeline">
+        <title>Timeline - Pattern Occurrences by Host</title>
+        <search base="pattern_search">
+          <query> | table _time Host Occurrences Sourcetype "Event Audit Trail" 
+| sort -Occurrences</query>
+        </search>
+        <option name="drilldown">all</option>
+        <option name="refresh.display">progressbar</option>
+        <option name="timeline_app.timeline.colorMode">sequencial</option>
+        <option name="timeline_app.timeline.minColor">#65a637</option>
+        <option name="timeline_app.timeline.useColors">1</option>
+      </viz>
+    </panel>
+  </row>
+  <row>
+    <panel>
       <table>
-        <search>
-          <query>host=$hosts$ index=$indexes$ sourcetype=$sourcetypes$ (crit* OR fail* OR fatal OR except* OR err* OR status &gt; 499) NOT success* OR NOT INFO OR NOT WARN $terms$ 
-                  | cluster showcount=t 
-                  | rename _raw as "Event Audit Trail" cluster_count as "#" sourcetype as Sourcetype host as Host 
-                  | table # _time Host Sourcetype "Event Audit Trail" 
-                  | sort -_time</query>
-          <earliest>$myTime.earliest$</earliest>
-          <latest>$myTime.latest$</latest>
+        <title>Pattern Recognition</title>
+        <search base="pattern_search">
+          <query> | table Occurrences _time Host Sourcetype "Event Audit Trail" 
+| sort -_time</query>
         </search>
         <option name="count">30</option>
         <option name="dataOverlayMode">heatmap</option>
@@ -127,7 +149,7 @@
         <strong>The Search</strong>
         <br/>
         <pre>
-<code>host=(choices) index=(choices) sourcetype=(choices) (crit* OR fail* OR fatal OR except* OR err* OR status &gt; 499) NOT success* OR NOT INFO OR NOT WARN (choices-text input) | cluster showcount=t | rename _raw as "Event Audit Trail" cluster_count as "#" sourcetype as Sourcetype host as Host | table _time Host Sourcetype "Event Audit Trail" # | sort -_time </code>
+<code>host=(choices) index=(choices) sourcetype=(choices) (crit* OR fail* OR fatal OR except* OR err* OR status &gt; 499) NOT success* OR NOT INFO OR NOT WARN (choices-text input) | cluster showcount=t | rename _raw as "Event Audit Trail" cluster_count as Occurrences sourcetype as Sourcetype host as Host | table _time Host Sourcetype "Event Audit Trail" # | sort -_time </code>
         </pre>
       <br/>
        <br/>  </div> </div> </div> </div> </html>
