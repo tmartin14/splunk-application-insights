@@ -12,6 +12,9 @@ The application also provides a Triage dashboard to help identify potential prob
 ### Sample Triage Dashboard
 <img src="images/triage.png" alt="Triage Screenshot" />
 
+### Sample Activity Auditor Dashboard
+<img src="images/Activity Auditor.png" alt="Triage Screenshot" />
+
 ### Splunk Pre-Release Software License Agreement 
 -------------------
 This software is provided as a pre-release software and is governed by Splunk's Pre-Release Software License Agreement which can be found here:
