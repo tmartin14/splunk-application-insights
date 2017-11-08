@@ -74,7 +74,6 @@ services:
       - /opt/splunk/etc
       - /opt/splunk/var
       - ./logs:/var/app/logs
-      - ./app:/opt/splunk/etc/apps/splunk_app_Application_Insights
     ports:
       - "8000:8000"
       - "9997:9997"
