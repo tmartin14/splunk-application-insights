@@ -78,7 +78,8 @@
     </finalized>
   </search>
   <search base="webserver">
-    <query>| search host="$host$" | stats avg(error_rate) as value | rangemap field=value low=0-5 guarded=6-10 elevated=11-20 high=21-49 severe=50-1000 default=low</query>
+    <query>| search host="$host$" | stats  sum(errors) as errors, sum("Total Requests") as requests | eval error_rate = errors/requests*100 | stats avg(error_rate) as value
+    | rangemap field=value low=0-5 guarded=6-10 elevated=11-20 high=21-49 severe=50-1000 default=low</query>
     <finalized>
       <set token="value_web">$result.value$</set>
       <set token="range_web">$result.range$</set>
@@ -780,7 +781,9 @@
         <title>Top 10 URLs</title>
         <search base="webserver">
           <query>| search host=$host$ 
-|  stats count as Total,  sum(errors) as Errors by uri_path | sort -Total | head 10</query>
+|  stats sum("Total Requests") as Total,  sum(errors) as Errors by uri_path | sort -Total | head 10</query>
+          <refresh>$refresh_token$</refresh>
+          <refreshType>delay</refreshType>
         </search>
         <option name="count">10</option>
         <option name="dataOverlayMode">none</option>
@@ -804,7 +807,11 @@
         <title>Error Rate</title>
         <search base="webserver">
           <query>| search host=$host$ 
-| timechart avg("error_rate") as "Error Rate (%)"</query>
+| stats  sum(errors) as errors, sum("Total Requests") as requests by _time
+|     eval error_rate = errors/requests*100
+| timechart avg(error_rate) as "Error Rate (%)"</query>
+          <refresh>$refresh_token$</refresh>
+          <refreshType>delay</refreshType>
         </search>
         <option name="charting.axisLabelsX.majorLabelStyle.overflowMode">ellipsisNone</option>
         <option name="charting.axisLabelsX.majorLabelStyle.rotation">0</option>
@@ -971,7 +978,7 @@
         <title>Top 10 URLs</title>
         <search base="appserver">
           <query>| search host=$host$ uri_path=*
-|  stats count as Total,  sum(errors) as Errors by uri_path | sort -Total | head 10</query>
+|  stats sum(requests) as Total,  sum(errors) as Errors by uri_path | sort -Total | head 10</query>
           <refresh>$refresh_token$</refresh>
           <refreshType>delay</refreshType>
         </search>

@@ -1,5 +1,5 @@
 <form>
-  <label>Transaction Finder</label>
+  <label>Activity Auditor</label>
   <!-- A row with two cells -->
   <fieldset submitButton="false" autoRun="false">
     <input type="time" token="myTime" searchWhenChanged="true">
@@ -38,7 +38,7 @@
       </search>
     </input>
     <input type="dropdown" token="maxPause" searchWhenChanged="true">
-      <label>Max time between events</label>
+      <label>Max time between actions</label>
       <choice value="1m">1 Minute</choice>
       <choice value="3m">3 minutes</choice>
       <choice value="5m">5 Minutes</choice>
@@ -51,6 +51,23 @@
       </search>
       <default>1m</default>
       <initialValue>1m</initialValue>
+      <fieldForLabel>a</fieldForLabel>
+      <fieldForValue>a</fieldForValue>
+    </input>
+    <input type="dropdown" token="maxSpan" searchWhenChanged="true">
+      <label>Max time to group as a session</label>
+      <choice value="5m">5 Minutes</choice>
+      <choice value="10m">10 minutes</choice>
+      <choice value="15m">15 Minutes</choice>
+      <choice value="60m">1 Hour</choice>
+      <choice value="2h">2 Hours</choice>
+      <search>
+        <query>| makeresults</query>
+        <earliest>-15m</earliest>
+        <latest>now</latest>
+      </search>
+      <default>5m</default>
+      <initialValue>5m</initialValue>
       <fieldForLabel>a</fieldForLabel>
       <fieldForValue>a</fieldForValue>
     </input>
@@ -76,7 +93,7 @@
               "Transactionally Related Events" are events that happen close together in time and are related by *some* field. Splunk is schemaless so this is all done on the fly.
               <br/>
             <br/>
-              For example: If a web server and an application server both talk to the same IP address(src_ip), use src_ip to "link" the events together and see what that user has been up to.  Mix and match and have soem fun!
+              For example: If a web server and an application server both talk to the same IP address(src_ip), use src_ip to "link" the events together and see what that user has been up to.  Mix and match and have some fun!
               <br/>
             <br/>
               <a class="btn full" href="javascript:();" data-toggle="modal" data-target="#info">Need more field names  <i class="icon-question-circle icon-modal-medium icon-color-easy m-left"/>
@@ -91,7 +108,7 @@
       <event>
         <title>Transactional Events</title>
         <search>
-          <query>"$terms$" sourcetype="$sourcetypes$" host="$hosts$" | transaction $fields$ maxpause=$maxPause$</query>
+          <query>"$terms$" sourcetype="$sourcetypes$" host="$hosts$" | transaction $fields$ maxpause=$maxPause$ maxspan=$maxSpan$</query>
           <earliest>$myTime.earliest$</earliest>
           <latest>$myTime.latest$</latest>
         </search>
