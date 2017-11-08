@@ -1,0 +1,131 @@
+<form>
+  <label>Transaction Finder</label>
+  <!-- A row with two cells -->
+  <fieldset submitButton="false" autoRun="false">
+    <input type="time" token="myTime" searchWhenChanged="true">
+      <label>Time</label>
+      <default>
+        <earliest>-15m</earliest>
+        <latest>now</latest>
+      </default>
+    </input>
+    <input type="multiselect" token="hosts" searchWhenChanged="true">
+      <label>Host(s)</label>
+      <choice value="*">All</choice>
+      <default>*</default>
+      <initialValue>*</initialValue>
+      <delimiter> OR host=</delimiter>
+      <fieldForLabel>host</fieldForLabel>
+      <fieldForValue>host</fieldForValue>
+      <search>
+        <query>* | stats dc(host) by host</query>
+        <earliest>$myTime.earliest$</earliest>
+        <latest>$myTime.latest$</latest>
+      </search>
+    </input>
+    <input type="multiselect" token="sourcetypes" searchWhenChanged="true">
+      <label>Sourcetype(s)</label>
+      <choice value="*">All</choice>
+      <default>*</default>
+      <initialValue>*</initialValue>
+      <delimiter>OR sourcetype=</delimiter>
+      <fieldForLabel>sourcetype</fieldForLabel>
+      <fieldForValue>sourcetype</fieldForValue>
+      <search>
+        <query>| metadata type=sourcetypes NOT _internal</query>
+        <earliest>$myTime.earliest$</earliest>
+        <latest>$myTime.latest$</latest>
+      </search>
+    </input>
+    <input type="dropdown" token="maxPause" searchWhenChanged="true">
+      <label>Max time between events</label>
+      <choice value="1m">1 Minute</choice>
+      <choice value="3m">3 minutes</choice>
+      <choice value="5m">5 Minutes</choice>
+      <choice value="10m">10 Minutes</choice>
+      <choice value="15m">15 Minutes</choice>
+      <search>
+        <query>| makeresults</query>
+        <earliest>-15m</earliest>
+        <latest>now</latest>
+      </search>
+      <default>1m</default>
+      <initialValue>1m</initialValue>
+      <fieldForLabel>a</fieldForLabel>
+      <fieldForValue>a</fieldForValue>
+    </input>
+    <input type="text" token="fields" searchWhenChanged="true">
+      <label>Field(s) to link together</label>
+      <default>src_ip dest_ip</default>
+      <initialValue>src_ip dest_ip</initialValue>
+    </input>
+    <input type="text" token="terms" searchWhenChanged="true">
+      <label>Limit search with more terms:</label>
+      <default>*</default>
+      <initialValue>*</initialValue>
+    </input>
+  </fieldset>
+  <row>
+    <panel>
+      <html id="btn_element7">
+          <div class="btn-group1">
+            <div style="margin:5px;">
+              Use this dashboard to identify transactionally related events from multiple data sources.  
+              <br/>
+            <br/>
+              "Transactionally Related Events" are events that happen close together in time and are related by *some* field. Splunk is schemaless so this is all done on the fly.
+              <br/>
+            <br/>
+              For example: If a web server and an application server both talk to the same IP address(src_ip), use src_ip to "link" the events together and see what that user has been up to.  Mix and match and have soem fun!
+              <br/>
+            <br/>
+              <a class="btn full" href="javascript:();" data-toggle="modal" data-target="#info">Need more field names  <i class="icon-question-circle icon-modal-medium icon-color-easy m-left"/>
+              </a>
+            </div>
+          </div>
+        </html>
+    </panel>
+  </row>
+  <row>
+    <panel>
+      <event>
+        <title>Transactional Events</title>
+        <search>
+          <query>"$terms$" sourcetype="$sourcetypes$" host="$hosts$" | transaction $fields$ maxpause=$maxPause$</query>
+          <earliest>$myTime.earliest$</earliest>
+          <latest>$myTime.latest$</latest>
+        </search>
+        <option name="count">20</option>
+        <option name="list.drilldown">outer</option>
+        <option name="list.wrap">0</option>
+        <option name="maxLines">20</option>
+        <option name="raw.drilldown">outer</option>
+        <option name="refresh.display">progressbar</option>
+        <option name="rowNumbers">0</option>
+        <option name="table.drilldown">all</option>
+        <option name="table.wrap">0</option>
+        <option name="type">list</option>
+      </event>
+    </panel>
+  </row>
+  <row id="howto">
+    <panel>
+      <html> <div id="info" class="modal fade" style="display: none;"> <div class="modal-dialog"> <div class="modal-content"> <div class="modal-header"> <h4 class="modal-title"> <i class="icn-easy draggable icon-modal-medium icon-color-easy m-right"/>Finding field names</h4> <button type="button" class="close" data-dismiss="modal" aria-hidden="false"> </button> </div> <div class="modal-body p-10"> 
+      If you're not sure what fields are available to link events together, you run a simple Splunk search to get a list of everything available. 
+      <br/>
+                <br/>
+      Here's the actual search:  
+      <br/>
+                <br/>
+      <pre>"$terms$" sourcetype="$sourcetypes$" host="$hosts$" | stats dc() as * | transpose | rename column as "Field Names" | table "Field Names"</pre>
+      <br/>
+                <br/>
+      Or just click here <a target="_blank" href="/app/splunk_app_Application_Insights/search?earliest=-15m&amp;latest=now&amp;q=search &quot;$terms$&quot; sourcetype=&quot;$sourcetypes$&quot; host=&quot;$hosts$&quot; | stats dc() as * | transpose | rename column as &quot;Field Names&quot; | table &quot;Field Names&quot; "> here</a> to run the search live
+
+      <br/>
+                <br/>
+      
+      <br/>  </div> </div> </div> </div> </html>
+    </panel>
+  </row>
+</form>

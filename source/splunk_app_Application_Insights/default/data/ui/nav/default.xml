@@ -5,6 +5,7 @@
   <view name="app_servers" />  
   <view name="operating_systems" />
   <view name="triage" />  
+  <view name="transactions" />  
 
   <collection label="Search &amp; Reporting...">  
   	<view name="search" />

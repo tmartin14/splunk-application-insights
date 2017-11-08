@@ -107,6 +107,11 @@
             <tr>
               <td colspan="3"> <b>Supporting Add-ons</b>  </td>
             </tr>
+           <tr>
+              <td><a target="_blank" href="https://splunkbase.splunk.com/app/3120/">Timeline - Custom Visualization</a></td>
+              <td><a target="_blank" href="http://docs.splunk.com/Documentation/Timeline/1.1.0/TimelineViz/TimelineIntro">Documentation</a></td>
+              <td>This visualization is used on the Triage dashboard to view the number of events over time by host. </td>
+            </tr>
             <tr>
               <td><a target="_blank" href="https://splunkbase.splunk.com/app/1621/">Splunk Common Information Model (CIM)</a></td>
               <td><a target="_blank" href="http://docs.splunk.com/Documentation/CIM/latest/User/Overview">Documentation</a></td>
